@@ -206,7 +206,7 @@ import {
   BForm, BBadge, BFormSelect, BTable, BAlert, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import axios from 'axios'
+import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
@@ -307,11 +307,7 @@ export default {
       this.attribute.parent_id = ''
     },
     getAttribute() {
-      axios.get(`${$themeConfig.app.API}v2/admin/attributes`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
+      axios.get(`${$themeConfig.app.API}v2/admin/attributes`)
         .then(res => {
           this.attributes = res.data.data
         })
@@ -320,11 +316,7 @@ export default {
         })
     },
     getValues() {
-      axios.get(`${$themeConfig.app.API}v2/admin/values`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
+      axios.get(`${$themeConfig.app.API}v2/admin/values`)
         .then(res => {
           this.values = res.data.data
         })
@@ -340,10 +332,6 @@ export default {
           slug: this.attribute.slug,
           id: this.attribute.id,
           parent_id: this.attribute.parent_id,
-        }, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
         })
           .then(() => {
             this.getValues()
@@ -396,11 +384,7 @@ export default {
         })
         .then(value => {
           if (value) {
-            axios.delete(`${$themeConfig.app.API}v2/admin/attributes/${data.id}`, {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-              },
-            })
+            axios.delete(`${$themeConfig.app.API}v2/admin/attributes/${data.id}`)
               .then(() => {
                 this.getValues()
                 this.$toast({
@@ -438,10 +422,6 @@ export default {
         url: `${$themeConfig.app.API}v2/admin/attributes`,
         data: myFormData,
         config: { headers: { 'Content-Type': 'multipart/form-data' } },
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
       })
         .then(() => {
           this.addStatus = true

@@ -1,11 +1,10 @@
 <template>
   <b-card>
     <b-row>
-      <b-col
+      <!-- <b-col
         md="3"
         class="mb-1"
       >
-        <!-- button on right -->
         <b-input-group>
           <b-form-input placeholder="Фильтр..." />
           <b-input-group-append>
@@ -14,7 +13,7 @@
             </b-button>
           </b-input-group-append>
         </b-input-group>
-      </b-col>
+      </b-col> -->
       <b-col md="9">
         <b-button
           v-ripple.400="'rgba(255, 159, 67, 0.15)'"
@@ -61,21 +60,48 @@
     >
       <validation-observer ref="simpleRules">
         <b-form>
-          <label for="input-default">Название</label>
-          <b-form-group>
-            <validation-provider
-              #default="{ errors }"
-              name="Название"
-              rules="required"
-            >
-              <b-form-input
-                id="input-default"
-                v-model="who.name"
-                placeholder="Название"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
+          <b-row>
+            <b-col cols="12">
+              <b-form-group
+                label="Название"
+                label-for="largeInput"
+              >
+                <validation-provider
+                  #default="{ errors }"
+                  name="Название"
+                  rules="required"
+                >
+                  <b-form-input
+                    id="largeInput"
+                    v-model="who.name"
+                    size="lg"
+                    placeholder="Название"
+                  />
+                  <small class="text-danger">{{ errors[0] }}</small>
+                </validation-provider>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group
+                label="slug"
+                label-for="largeInput"
+              >
+                <validation-provider
+                  #default="{ errors }"
+                  name="Slug"
+                  rules="required"
+                >
+                  <b-form-input
+                    id="slugInput"
+                    v-model="who.slug"
+                    size="lg"
+                    placeholder="Slug"
+                  />
+                  <small class="text-danger">{{ errors[0] }}</small>
+                </validation-provider>
+              </b-form-group>
+            </b-col>
+          </b-row>
         </b-form>
       </validation-observer>
     </b-modal>
@@ -153,8 +179,6 @@ import {
   BCol,
   BFormGroup,
   BFormInput,
-  BInputGroup,
-  BInputGroupAppend,
   BModal,
   BRow,
   BTable,
@@ -175,8 +199,6 @@ export default {
     BTable,
     BCard,
     BModal,
-    BInputGroup,
-    BInputGroupAppend,
     BRow,
     BCol,
   },
@@ -243,11 +265,7 @@ export default {
       })
     },
     getWho() {
-      axios.get(`${$themeConfig.app.API}v2/admin/for-who`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
+      axios.get(`${$themeConfig.app.API}v2/admin/for-who`)
         .then(res => {
           this.items = res.data.data
           console.log(this.items)
@@ -259,6 +277,7 @@ export default {
     async add() {
       const myFormData = new FormData()
       myFormData.append('name', this.who.name)
+      myFormData.append('slug', this.who.slug)
       await axios({
         method: 'POST',
         url: `${$themeConfig.app.API}v2/admin/for-who`,

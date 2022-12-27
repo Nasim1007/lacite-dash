@@ -294,7 +294,6 @@ import {
   BFormSelect,
 } from 'bootstrap-vue'
 import axios from '@axios'
-import data from 'qs'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 

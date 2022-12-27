@@ -272,10 +272,10 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
 import {
-  BBadge, BForm, BFormTextarea, BFormSelect, BTable, BAlert, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton,
+  BBadge, BForm, BFormTextarea, BFormSelect, BTable, BCard, BDropdown, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import axios from 'axios'
+import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
@@ -288,20 +288,14 @@ export default {
     BFormTextarea,
     BFormSelect,
     BCard,
-    // eslint-disable-next-line vue/no-unused-components
-    BFormFile,
     BFormInput,
     BFormGroup,
     BTable,
     BRow,
     BCol,
     BButton,
-    // eslint-disable-next-line vue/no-unused-components
-    VBModal,
     BModal,
     BDropdown,
-    // eslint-disable-next-line vue/no-unused-components
-    BAlert,
   },
   directives: {
     'b-modal': VBModal,
@@ -363,9 +357,9 @@ export default {
     }
   },
   mounted() {
-    this.getCategories()
     this.getSubCategories()
-    // this.getWho()
+    this.getWho()
+    this.getCategories()
   },
   methods: {
     getCategories() {
@@ -394,15 +388,15 @@ export default {
           console.log(er)
         })
     },
-    // getWho() {
-    //   axios.get(`${$themeConfig.app.API}v2/admin/for-who`)
-    //     .then(res => {
-    //       this.options = res.data.data
-    //     })
-    //     .catch(er => {
-    //       console.log(er)
-    //     })
-    // },
+    getWho() {
+      axios.get(`${$themeConfig.app.API}v2/admin/for-who`)
+        .then(res => {
+          this.options = res.data.data
+        })
+        .catch(er => {
+          console.log(er)
+        })
+    },
     async add() {
       const myFormData = new FormData()
       myFormData.append('name', this.subcategory.name)
@@ -410,10 +404,9 @@ export default {
       myFormData.append('description', this.subcategory.description)
       myFormData.append('parent_id', this.subcategory.parent_id)
       // myFormData.append('for_whos_id', this.subcategory.for_who)
-      await axios.post(`${$themeConfig.app.API}v2/admin/categories`, myFormData, {
+      await axios.post(`${$themeConfig.app.API}v2/admin/subcategories`, myFormData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then(() => {
@@ -451,7 +444,7 @@ export default {
     handleEdit() {
       // Edit request
       if (this.subcategory.id !== '') {
-        axios.put(`${$themeConfig.app.API}v2/admin/categories/${this.subcategory.id}`, {
+        axios.put(`${$themeConfig.app.API}v2/admin/subcategories/${this.subcategory.id}`, {
           name: this.subcategory.name,
           slug: this.subcategory.slug,
           description: this.subcategory.description,

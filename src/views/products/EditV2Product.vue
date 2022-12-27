@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/require-v-for-key -->
 <template>
   <b-tabs
     vertical
@@ -592,9 +591,7 @@ export default {
   methods: {
 
     handleOk(bvModalEvt) {
-      // Prevent modal from closing
       bvModalEvt.preventDefault()
-      // Trigger submit handler
       this.handleEdit()
     },
     async addAttributes() {
@@ -824,7 +821,6 @@ export default {
       })
     },
     async edit() {
-
       if (this.product.file) {
         this.product.image = await this.getBase64(this.product.file)
       }

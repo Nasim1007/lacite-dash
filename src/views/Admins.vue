@@ -1,11 +1,10 @@
 <template>
   <b-card>
     <b-row>
-      <b-col
+      <!-- <b-col
         md="3"
         class="mb-1"
       >
-        <!-- button on right -->
         <b-input-group>
           <b-form-input placeholder="Фильтр..." />
           <b-input-group-append>
@@ -14,7 +13,7 @@
             </b-button>
           </b-input-group-append>
         </b-input-group>
-      </b-col>
+      </b-col> -->
       <!-- <b-col md="9">
         <b-button
           v-ripple.400="'rgba(255, 159, 67, 0.15)'"
@@ -242,22 +241,17 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
 import Ripple from 'vue-ripple-directive'
 import {
-//   BAvatar,
   BForm,
-  BButton,
   BCard,
   BCol,
   BFormGroup,
   BFormInput,
-  BInputGroup,
-  BInputGroupAppend,
   BModal,
   BRow,
   BTable,
-  //   BFormFile,
   VBModal,
 } from 'bootstrap-vue'
-import axios from 'axios'
+import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
@@ -270,12 +264,9 @@ export default {
     ValidationObserver,
     BFormGroup,
     BFormInput,
-    BButton,
     BTable,
     BCard,
     BModal,
-    BInputGroup,
-    BInputGroupAppend,
     BRow,
     BCol,
   },

@@ -10,7 +10,7 @@
         <b-col class="right">
           <h4>{{ order.discount }}%</h4>
         </b-col>
-      </b-row> d
+      </b-row>
       <b-row>
         <b-col>
           <h4>Способ доставка</h4>
@@ -54,17 +54,16 @@
       <b-form-group>
 
         <b-form-select
+          v-if="order.statuses"
           v-model="order.status_id"
           text-field="name"
           value-field="id"
           @change="onChange"
-          v-if="order.statuses"
         >
           <option
             :value="null"
             disabled
           />
-          // eslint-disable-next-line vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key
           <option
             v-for="status in this.order.statuses"
             :value="status.id"
@@ -116,65 +115,31 @@
 </template>
 
 <script>
-import vSelect from 'vue-select'
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import { required } from '@validations'
 import {
-  BButton,
   BCardBody,
   BCard,
-  BCardText,
   BCol,
-  BForm,
   BFormGroup,
-  BFormInput,
-  BFormSelect,
-  BFormTextarea,
-  BDropdown,
-  BDropdownItem,
   BRow,
-  BTabs,
-  BTab,
   BTable,
+  BFormSelect,
 } from 'bootstrap-vue'
-// import 'vue-form-wizard/dist/vue-form-wizard.min.css'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
-// eslint-disable-next-line no-unused-vars
-import { values } from 'postcss-rtl/lib/affected-props'
-
-import BCardCode from '@core/components/b-card-code/BCardCode.vue'
-import { quillEditor } from 'vue-quill-editor'
-import { codeBubble } from './forms/quill-editor/code'
 import 'quill/dist/quill.core.css'
-// eslint-disable-next-line
-  import 'quill/dist/quill.snow.css'
-// eslint-disable-next-line
-  import 'quill/dist/quill.bubble.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 export default {
   components: {
-    ValidationProvider,
-    ValidationObserver,
-    BForm,
-    BDropdown,
-    BDropdownItem,
-    BButton,
-    BFormTextarea,
-    BFormSelect,
     BFormGroup,
-    BFormInput,
     BCardBody,
     BCol,
     BRow,
     BCard,
-    BCardText,
-    BTabs,
-    BTab,
-    vSelect,
     BTable,
+    BFormSelect,
   },
   data() {
     return {
@@ -258,14 +223,10 @@ export default {
       await axios.get(`${$themeConfig.app.API}v2/admin/orders/${this.$route.params.id}`).then(res => {
         this.order = res.data.data
         this.items = this.order.items
-        // this.status = this.order.statuses
         console.log('res', res.data.data)
       }).catch(er => {
         console.log(er)
       })
-      // await axios.get(`${$themeConfig.app.API}v2/admin/users/${this.order}`).then(res => {
-      //   this.user = res.data.data
-      // })
     },
   },
 }

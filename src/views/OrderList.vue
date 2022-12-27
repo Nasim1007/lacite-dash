@@ -2,11 +2,10 @@
   <b-card>
     <b-card>
       <b-row>
-        <b-col
+        <!-- <b-col
           md="3"
           class="mb-1"
         >
-          <!-- button on right -->
           <b-input-group>
             <b-form-input placeholder="Фильтр" />
             <b-input-group-append>
@@ -15,7 +14,7 @@
               </b-button>
             </b-input-group-append>
           </b-input-group>
-        </b-col>
+        </b-col> -->
         <b-col
           md="9"
           class="d-flex justify-content-end"
@@ -71,10 +70,6 @@ import {
   BBadge,
   BButton,
   BCol,
-  BFormGroup,
-  BFormInput,
-  BInputGroup,
-  BInputGroupAppend,
   BModal,
   BRow,
   BTable,
@@ -82,12 +77,9 @@ import {
   BCard,
   BFormSelect,
 } from 'bootstrap-vue'
-// import MyDiolog from '@/@core/components/MyDiolog.vue'
 import Ripple from 'vue-ripple-directive'
 import axios from 'axios'
 import { $themeConfig } from '@themeConfig'
-// eslint-disable-next-line import/extensions
-import ToastificationContent from '@core/components/toastification/ToastificationContent'
 
 export default {
 
@@ -98,14 +90,10 @@ export default {
     BModal,
     BBadge,
     BTable,
-    BFormInput,
-    BInputGroup,
-    BInputGroupAppend,
     BRow,
     BCol,
     BCard,
     BButton,
-    BFormGroup,
     BFormSelect,
 
   },

@@ -343,7 +343,7 @@ export default {
         },
       })
         .then(() => {
-          this.addStatus = true
+          this.getStores()
           this.getStores()
           this.$toast({
             component: ToastificationContent,

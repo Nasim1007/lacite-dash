@@ -145,7 +145,6 @@
                         :src="product.image"
                       >
                     </div>
-                    {{ product.image }}
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
@@ -775,7 +774,7 @@ export default {
       }).then(res => {
         this.product = res.data.data
         this.product.categories = res.data.data.categories.map(x => x.id)
-        this.product.discount_id = res.data.data.discount.id
+        this.product.discount_id = res.data.data.discount ? res.data.data.discount.id : ''
       }).catch(er => {
         console.log(er)
       })
@@ -829,8 +828,6 @@ export default {
       if (this.product.file) {
         this.product.image = await this.getBase64(this.product.file)
       }
-
-      this.product.discount_id = this.product.discount.id
 
       delete this.product.discount
       delete this.product.brand

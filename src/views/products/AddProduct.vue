@@ -438,8 +438,6 @@ export default {
       images: [],
       values: [],
       brands: [],
-      // eslint-disable-next-line no-dupe-keys, vue/no-dupe-keys
-      categories: [],
       errors: [],
       product: {
         id: '',

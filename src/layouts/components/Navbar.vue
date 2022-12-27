@@ -67,6 +67,7 @@ import {
 import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
 import router from '@/router'
 import axios from 'axios'
+import { $themeConfig } from '@themeConfig'
 // import axios from 'axios'
 
 export default {
@@ -89,7 +90,7 @@ export default {
   methods: {
     logout() {
       localStorage.clear()
-      axios.post('https://api.lacite.tj/api/auth/logout', {
+      axios.post(`${$themeConfig.app.API}auth/logout`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`,
         },

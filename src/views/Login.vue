@@ -158,6 +158,7 @@ import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 // eslint-disable-next-line import/no-cycle
 import router from '@/router'
 import axios from 'axios'
+import { $themeConfig } from '@themeConfig'
 
 export default {
   components: {
@@ -207,7 +208,7 @@ export default {
     login() {
       this.$refs.loginForm.validate().then(success => {
         if (success) {
-          axios.post('https://api.lacite.tj/api/auth/login', {
+          axios.post(`${$themeConfig.app.API}auth/login`, {
             email: this.userEmail,
             password: this.password,
           }).then(async response => {

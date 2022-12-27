@@ -296,7 +296,7 @@
     <b-tab title="Галерея изображений">
 
       <div
-        v-for="item, index in product.images"
+        v-for="(item, index) in product.images"
         :key="index"
       >
         <span class="">
@@ -329,7 +329,7 @@
 
       </div>
       <div
-        v-for="item, index in images"
+        v-for="(item, index) in images"
         :key="index"
       >
         <span class="">
@@ -374,7 +374,8 @@
                   >
                     -- Please select an option --
                   </option>
-                  // eslint-disable-next-line vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key
+                  // eslint-disable-next-line vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key,
+                  vue/require-v-for-key, vue/require-v-for-key
                   <option
                     v-for="attribute in attributes"
                     :value="attribute"
@@ -435,7 +436,7 @@
             class="primary"
             @click="addAttributes"
           >
-            добавить
+            Добавить
           </b-button>
         </b-col>
       </b-card>
@@ -471,7 +472,7 @@
 
 <script>
 import vSelect from 'vue-select'
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { required } from '@validations'
 import {
   BButton,
@@ -483,9 +484,9 @@ import {
   BFormSelect,
   BFormTextarea,
   BRow,
-  BTabs,
   BTab,
   BTable,
+  BTabs,
 } from 'bootstrap-vue'
 // import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
@@ -493,7 +494,6 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 // eslint-disable-next-line no-unused-vars
-import { values } from 'postcss-rtl/lib/affected-props'
 
 import BCardCode from '@core/components/b-card-code/BCardCode.vue'
 import { quillEditor } from 'vue-quill-editor'
@@ -537,6 +537,7 @@ export default {
           ],
         },
       },
+      uploadFieldName: 'Загрузка файлов',
       fields: ['id',
         { key: 'type.name', label: 'Тип атрибута' },
         { key: 'name', label: 'Значения' },
@@ -547,7 +548,7 @@ export default {
       addStatus: false,
       brands: [],
       price: '',
-      col: 0,
+      kol: 0,
       categories: [],
       attributes: [],
       attribute: '',
@@ -565,21 +566,23 @@ export default {
         file: '',
         image: '',
         images: '',
-        attributes: '',
+        attributes: [],
         showIcon: false,
         compound: '',
         characteristics: '',
+        categories: [],
         id: '',
         discount_percent: '',
         discount_id: '',
+        brand: {
+          id: '',
+        },
 
       },
       selectedSize: null,
     }
   },
-  computed: {
-
-  },
+  computed: {},
   mounted() {
     this.getBrands()
     this.getCategories()
@@ -654,9 +657,7 @@ export default {
             },
           })
           this.$router.push(`/product/edit/${this.$route.params.id}`)
-          // this.product.attributes = this.product.attributes.splice(id, 1)
           this.product.attributes = this.product.attributes.filter(item => item.id !== id)
-          console.log()
         }).catch(e => {
           this.addStatus = false
           console.log(e)
@@ -773,10 +774,11 @@ export default {
         },
       }).then(res => {
         this.product = res.data.data
+        this.product.categories = res.data.data.categories.map(x => x.id)
+        this.product.discount_id = res.data.data.discount.id
       }).catch(er => {
         console.log(er)
       })
-      console.log(this.product)
     },
     async getAttribute() {
       await axios.get(`${$themeConfig.app.API}v2/admin/attributes`, {
@@ -788,7 +790,6 @@ export default {
       }).catch(er => {
         console.log(er)
       })
-      console.log(this.attributes)
     },
     async getBrands() {
       await axios.get(`${$themeConfig.app.API}v2/admin/brands`, {
@@ -824,31 +825,22 @@ export default {
       })
     },
     async edit() {
-      const myFormData = new FormData()
-      myFormData.append('name', this.product.name)
-      myFormData.append('slug', this.product.slug)
-      myFormData.append('sku', this.product.sku)
-      myFormData.append('featured', 0)
-      myFormData.append('status', 1)
-      myFormData.append('categories', `${this.product.categories}`)
-      myFormData.append('brand_id', this.product.brand_id)
-      myFormData.append('description', this.product.description)
-      myFormData.append('price', this.product.price)
-      myFormData.append('quantity', 1)
-      myFormData.append('compound', this.product.compound)
-      myFormData.append('characteristics', this.product.characteristics)
-      myFormData.append('discount_id', this.product.discount_id)
-      myFormData.append('discount_percent', this.product.discount_percent)
-      myFormData.append('_method', 'put')
 
       if (this.product.file) {
-        myFormData.append('image', `${await this.getBase64(this.product.file)}`)
+        this.product.image = await this.getBase64(this.product.file)
       }
 
-      await axios.post(`${$themeConfig.app.API}v2/admin/products/${this.product.id}`, myFormData,
+      this.product.discount_id = this.product.discount.id
+
+      delete this.product.discount
+      delete this.product.brand
+      delete this.product.for_who
+
+      await axios.put(`${$themeConfig.app.API}v2/admin/products/${this.product.id}`, this.product,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            // 'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json;charset=UTF-8',
             Accept: 'application/json',
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -941,7 +933,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url("https://img.icons8.com/material-outlined/50/trash--v1.png") no-repeat center center;
+  background: url('https://img.icons8.com/material-outlined/50/trash--v1.png') no-repeat center center;
   opacity: 0;
   z-index: 1;
   transition: opacity 0.4s ease;

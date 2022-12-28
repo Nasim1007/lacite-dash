@@ -10,7 +10,7 @@ export default [
     icon: 'AlignJustifyIcon',
     children: [
       {
-        title: 'Создание Атрибута',
+        title: 'Создание aтрибута',
         route: 'attribute',
       },
       {

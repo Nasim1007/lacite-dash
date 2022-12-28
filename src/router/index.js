@@ -38,7 +38,7 @@ const router = new VueRouter({
         requiresAuth: true,
         breadcrumb: [
           {
-            text: 'Атрибуты',
+            text: 'Создание атрибута',
             active: true,
             resource: 'Auth',
             action: 'read',
@@ -51,11 +51,11 @@ const router = new VueRouter({
       name: 'brands',
       component: () => import('@/views/Brands.vue'),
       meta: {
-        pageTitle: 'Бренд',
+        pageTitle: 'Бренды',
         requiresAuth: true,
         breadcrumb: [
           {
-            text: 'Бренд',
+            text: 'Бренды',
             active: true,
             resource: 'Auth',
             action: 'read',
@@ -154,11 +154,11 @@ const router = new VueRouter({
       // eslint-disable-next-line import/extensions
       component: () => import('@/views/attributes/AttributeValue'),
       meta: {
-        pageTitle: 'Создание Атрибута',
+        pageTitle: 'Атрибута',
         requiresAuth: true,
         breadcrumb: [
           {
-            text: 'Создание Атрибута',
+            text: 'Значиние атрибута',
             active: true,
             resource: 'Auth',
             action: 'read',
@@ -205,11 +205,11 @@ const router = new VueRouter({
       name: 'admins',
       component: () => import('@/views/Admins.vue'),
       meta: {
-        pageTitle: 'Админи',
+        pageTitle: 'Админы',
         requiresAuth: true,
         breadcrumb: [
           {
-            text: 'Админи',
+            text: 'Админы',
             active: true,
             resource: 'Auth',
             action: 'read',
@@ -222,11 +222,11 @@ const router = new VueRouter({
       name: 'moderator',
       component: () => import('@/views/Admins.vue'),
       meta: {
-        pageTitle: 'Админи',
+        pageTitle: 'Админы',
         requiresAuth: true,
         breadcrumb: [
           {
-            text: 'Админи',
+            text: 'Админы',
             active: true,
             resource: 'Auth',
             action: 'read',
@@ -239,7 +239,7 @@ const router = new VueRouter({
       name: 'orders',
       component: () => import('@/views/OrderList.vue'),
       meta: {
-        pageTitle: 'Список Заказов',
+        pageTitle: 'Список заказов',
         requiresAuth: true,
         breadcrumb: [
           {
@@ -311,7 +311,7 @@ const router = new VueRouter({
         requiresAuth: true,
         breadcrumb: [
           {
-            text: 'Магазины',
+            text: 'Пользователы',
             active: true,
             resource: 'Auth',
             action: 'read',

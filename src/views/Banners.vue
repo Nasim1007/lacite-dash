@@ -214,7 +214,7 @@ export default {
         },
         {
           key: 'type',
-          label: 'Бренд',
+          label: 'Тип',
           sortable: true,
         },
         {

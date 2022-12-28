@@ -268,7 +268,13 @@
         </b-form>
       </validation-observer>
     </b-modal>
-
+    <b-pagination
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getBrands"
+    />
   </b-card>
 
 </template>
@@ -292,10 +298,12 @@ import {
   VBModal,
   BFormFile,
   BFormSelect,
+  BPagination,
 } from 'bootstrap-vue'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from './Pagination/code'
 
 export default {
   components: {
@@ -314,6 +322,7 @@ export default {
     BCol,
     BFormFile,
     BFormSelect,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -376,6 +385,10 @@ export default {
         { value: 'male', text: 'Мужчина' },
         { value: 'female', text: 'Женщина' },
       ],
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
     }
   },
   mounted() {
@@ -394,7 +407,8 @@ export default {
       axios.get(`${$themeConfig.app.API}v2/admin/reviews`)
         .then(res => {
           this.reviews = res.data.data
-          console.log(this.reviews)
+          this.rows = res.data.meta.total
+          this.perPage = res.data.meta.per_page
         })
         .catch(er => {
           console.log(er)

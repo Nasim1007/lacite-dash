@@ -266,18 +266,26 @@
         </validation-observer>
       </b-modal>
     </div>
+    <b-pagination
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getSubCategories"
+    />
   </b-card>
 </template>
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
 import {
-  BBadge, BForm, BFormTextarea, BFormSelect, BTable, BCard, BDropdown, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton,
+  BBadge, BForm, BFormTextarea, BFormSelect, BTable, BCard, BDropdown, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BPagination,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from '../Pagination/code'
 
 export default {
   components: {
@@ -296,6 +304,7 @@ export default {
     BButton,
     BModal,
     BDropdown,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -354,10 +363,14 @@ export default {
           label: 'Действия',
         },
       ],
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
     }
   },
   mounted() {
-    this.getSubCategories()
+    this.getSubCategories(1)
     this.getWho()
     this.getCategories()
   },
@@ -375,14 +388,16 @@ export default {
           console.log(er)
         })
     },
-    getSubCategories() {
-      axios.get(`${$themeConfig.app.API}v2/admin/subcategories?page=1&perPage=300`, {
+    getSubCategories(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/subcategories?page=${page}&perPage=${this.perPage}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then(res => {
           this.SubCategories = res.data.data
+          this.rows = res.data.total
+          this.perPage = res.data.per_page
         })
         .catch(er => {
           console.log(er)

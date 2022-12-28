@@ -56,6 +56,13 @@
           />
         </template> -->
     </b-table>
+    <b-pagination
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getUsers"
+    />
   </b-card>
 
 </template>
@@ -76,10 +83,12 @@ import {
   BTable,
   //   BFormFile,
   VBModal,
+  BPagination,
 } from 'bootstrap-vue'
 import axios from 'axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from './Pagination/code'
 
 export default {
   components: {
@@ -93,6 +102,7 @@ export default {
     BInputGroupAppend,
     BRow,
     BCol,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -146,10 +156,14 @@ export default {
         phone: '',
         address: '',
       },
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
     }
   },
   mounted() {
-    this.getUsers()
+    this.getUsers(1)
   },
   methods: {
     validationForm() {
@@ -160,15 +174,16 @@ export default {
         }
       })
     },
-    getUsers() {
-      axios.get(`${$themeConfig.app.API}v2/admin/users`, {
+    getUsers(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/users?per_page=${this.perPage}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then(res => {
           this.users = res.data.data
-          console.log(this.users)
+          this.rows = res.data.meta.total
+          this.perPage = res.data.meta.per_page
         })
         .catch(er => {
           console.log(er)

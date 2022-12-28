@@ -133,7 +133,6 @@
           </b-form-group>
 
         </b-col>
-
         <b-col cols="12">
           <b-form-group>
             <b-form-file
@@ -234,7 +233,13 @@
         </b-form>
       </validation-observer>
     </b-modal>
-
+    <b-pagination
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getBrands"
+    />
   </b-card>
 
 </template>
@@ -258,10 +263,12 @@ import {
   BTable,
   BFormFile,
   VBModal,
+  BPagination,
 } from 'bootstrap-vue'
 import axios from 'axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from './Pagination/code'
 
 export default {
   components: {
@@ -280,6 +287,7 @@ export default {
     BInputGroupAppend,
     BRow,
     BCol,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -330,10 +338,14 @@ export default {
         description: '',
         file: '',
       },
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
     }
   },
   mounted() {
-    this.getBrands()
+    this.getBrands(1)
   },
   methods: {
     validationForm() {
@@ -344,15 +356,16 @@ export default {
         }
       })
     },
-    getBrands() {
-      axios.get(`${$themeConfig.app.API}v2/admin/brands?per_page=200`, {
+    getBrands(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/brands?per_page=${this.perPage}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then(res => {
           this.items = res.data.data
-          console.log(this.items)
+          this.rows = res.data.total
+          this.perPage = res.data.per_page
         })
         .catch(er => {
           console.log(er)

@@ -18,7 +18,7 @@ export default {
     return {
       currentPage: 1,
       perPage: 1,
-      rows: 100,
+      rows: 1,
     }
   },
 }

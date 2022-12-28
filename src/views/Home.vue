@@ -102,6 +102,7 @@
       v-model="currentPage"
       hide-goto-end-buttons
       :total-rows="rows"
+      :per-page="perPage"
       @input="getProducts"
     />
   </b-card>
@@ -124,11 +125,11 @@ import {
 } from 'bootstrap-vue'
 // import MyDiolog from '@/@core/components/MyDiolog.vue'
 import Ripple from 'vue-ripple-directive'
-import axios from 'axios'
+import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 // eslint-disable-next-line import/extensions
 import ToastificationContent from '@core/components/toastification/ToastificationContent'
-import { codeBasic } from './Pagination/code'
+import { codeSeparated } from './Pagination/code'
 
 export default {
 
@@ -168,10 +169,10 @@ export default {
         { key: 'sku', label: 'Артикул', sortable: true },
         { key: 'actions', label: 'Действия' },
       ],
-      codeBasic,
+      codeSeparated,
       currentPage: 1,
-      perPage: 15,
-      rows: 202,
+      perPage: '',
+      rows: '',
     }
   },
   mounted() {
@@ -196,7 +197,7 @@ export default {
         },
       }).then(res => {
         this.products = res.data.data
-        this.row = res.data.total
+        this.rows = res.data.total
         this.currentPage = res.data.current_page
         this.perPage = res.data.per_page
       }).catch(er => {

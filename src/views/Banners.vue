@@ -40,6 +40,14 @@
             />
           </div>
         </template>
+        <template #cell(path)="data">
+          <img
+            class="mr-1"
+            :src="data.item.path"
+            width="65"
+            height="40"
+          >
+        </template>
       </b-table>
       <b-modal
         id="modal-primaryadd"
@@ -208,7 +216,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'image',
+          key: 'path',
           label: 'Изображение',
           sortable: true,
         },

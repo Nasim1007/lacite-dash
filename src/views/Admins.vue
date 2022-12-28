@@ -335,7 +335,6 @@ export default {
       })
         .then(res => {
           this.items = res.data.data
-          console.log(this.items)
         })
         .catch(er => {
           console.log(er)

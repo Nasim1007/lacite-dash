@@ -256,7 +256,7 @@ const router = new VueRouter({
       name: 'order',
       component: () => import('@/views/OrderPage.vue'),
       meta: {
-        pageTitle: 'Закаызы',
+        pageTitle: 'Заказы',
         requiresAuth: true,
         breadcrumb: [
           {

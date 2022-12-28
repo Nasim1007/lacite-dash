@@ -168,7 +168,7 @@ export default {
         },
         {
           key: 'item_id',
-          label: 'id товарa',
+          label: 'Код',
           sortable: true,
         },
         {

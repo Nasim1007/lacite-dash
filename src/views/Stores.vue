@@ -292,11 +292,6 @@ export default {
           sortable: true,
         },
         {
-          key: 'image',
-          label: 'Изображение',
-          sortable: true,
-        },
-        {
           key: 'actions',
           label: 'Действия',
         },

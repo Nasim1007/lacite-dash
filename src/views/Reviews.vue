@@ -47,6 +47,13 @@
           <feather-icon icon="TrashIcon" />
         </b-button>
       </template>
+      <template #cell(image)="data">
+        <b-avatar
+          v-if="data.item.image"
+          class="mr-1"
+          :src="data.item.image"
+        />
+      </template>
     </b-table>
     <b-modal
       id="modal-add"
@@ -296,6 +303,7 @@ import {
   BFormFile,
   BFormSelect,
   BPagination,
+  BAvatar,
 } from 'bootstrap-vue'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
@@ -318,6 +326,7 @@ export default {
     BFormFile,
     BFormSelect,
     BPagination,
+    BAvatar,
   },
   directives: {
     'b-modal': VBModal,
@@ -344,6 +353,11 @@ export default {
         {
           key: 'content',
           label: 'Описание',
+          sortable: true,
+        },
+        {
+          key: 'image',
+          label: 'Аватар',
           sortable: true,
         },
         {

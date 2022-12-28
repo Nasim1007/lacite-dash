@@ -431,7 +431,7 @@ export default {
       if (this.brand.file) {
         myFormData.append('logo', `${await this.getBase64(this.brand.file)}`)
       }
-      myFormData.append('_method', 'PUT')
+      myFormData.append('_method', 'put')
       // Edit request
       if (this.brand.id !== '') {
         await axios.post(`${$themeConfig.app.API}v2/admin/brands/${this.brand.id}`, myFormData, {

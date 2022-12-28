@@ -70,7 +70,15 @@
             <feather-icon icon="TrashIcon" />
           </b-button>
         </template>
-
+        <!-- <template #cell(image)="data">
+          <img
+            v-if="data.item.image"
+            class="mr-1"
+            :src="`${IMG_URL}${data.item.image}`"
+            width="40"
+            height="40"
+          >
+        </template> -->
       </b-table>
     </b-card>
     <b-modal
@@ -167,6 +175,7 @@ export default {
         { key: 'name', label: 'Название', sortable: true },
         { key: 'price', label: 'Цена', sortable: true },
         { key: 'sku', label: 'Артикул', sortable: true },
+        // { key: 'image', label: 'Картинка' },
         { key: 'actions', label: 'Действия' },
       ],
       codeSeparated,

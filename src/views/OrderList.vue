@@ -107,7 +107,7 @@ export default {
       orders: [],
       tableColumns: [
         { key: 'id', label: '#', sortable: true },
-        { key: 'user_id', label: 'Имя', sortable: true },
+        { key: 'user.name', label: 'Имя', sortable: true },
         // { key: 'payment_method_id', label: 'Способ оплата', sortable: true },
         { key: 'shipping_type', label: 'Адресь', sortable: true },
         // { key: 'discount', label: 'Скидка' },

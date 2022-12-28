@@ -141,7 +141,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'orders',
+          key: 'orders_count',
           label: 'заказов',
         },
         // {

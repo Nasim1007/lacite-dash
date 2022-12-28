@@ -1,11 +1,10 @@
 <template>
   <b-card>
     <b-row>
-      <b-col
+      <!-- <b-col
         md="3"
         class="mb-1"
       >
-        <!-- button on right -->
         <b-input-group>
           <b-form-input placeholder="Фильтр..." />
           <b-input-group-append>
@@ -14,7 +13,7 @@
             </b-button>
           </b-input-group-append>
         </b-input-group>
-      </b-col>
+      </b-col> -->
       <b-col md="9">
         <b-button
           v-ripple.400="'rgba(255, 159, 67, 0.15)'"
@@ -290,8 +289,6 @@ import {
   BCol,
   BFormGroup,
   BFormInput,
-  BInputGroup,
-  BInputGroupAppend,
   BModal,
   BRow,
   BTable,
@@ -316,8 +313,6 @@ export default {
     BTable,
     BCard,
     BModal,
-    BInputGroup,
-    BInputGroupAppend,
     BRow,
     BCol,
     BFormFile,

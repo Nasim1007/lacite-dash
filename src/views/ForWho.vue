@@ -230,11 +230,13 @@ export default {
         },
         {
           key: 'created_at',
+          formatter: value => new Date(value).toLocaleString(),
           label: 'Создан',
           sortable: true,
         },
         {
           key: 'updated_at',
+          formatter: value => new Date(value).toLocaleString(),
           label: 'Обнавлен',
           sortable: true,
         },

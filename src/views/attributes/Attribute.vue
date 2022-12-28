@@ -143,6 +143,13 @@
         </b-form>
       </validation-observer>
     </b-modal>
+    <b-pagination
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getAttribute"
+    />
   </b-card>
 </template>
 
@@ -159,6 +166,7 @@ import {
   VBModal,
   BBadge,
   BForm,
+  BPagination,
 } from 'bootstrap-vue'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
@@ -166,6 +174,7 @@ import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from '../Pagination/code'
 
 export default {
   components: {
@@ -181,6 +190,7 @@ export default {
     BTable,
     BButton,
     BBadge,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -239,6 +249,10 @@ export default {
         name: '',
         slug: '',
       },
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
       // itemss: [
       //   {
       //     Name: 40,
@@ -256,7 +270,7 @@ export default {
     }
   },
   mounted() {
-    this.getAttribute()
+    this.getAttribute(1)
   },
   methods: {
     validationForm() {
@@ -323,14 +337,16 @@ export default {
       this.attribute.id = ''
       this.attribute.slug = ''
     },
-    getAttribute() {
-      axios.get(`${$themeConfig.app.API}v2/admin/attributes`, {
+    getAttribute(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/attributes?per_page=${this.perPage}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then(res => {
           this.attributes = res.data.data
+          this.rows = res.data.total
+          this.perPage = res.data.per_page
         })
         .catch(er => {
           console.log(er)

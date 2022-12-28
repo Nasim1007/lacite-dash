@@ -196,6 +196,13 @@
         </validation-observer>
       </b-modal>
     </div>
+    <b-pagination
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getAttribute"
+    />
   </b-card>
 </template>
 <script>
@@ -203,12 +210,13 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 // eslint-disable-next-line no-unused-vars
 import { required } from '@validations'
 import {
-  BForm, BBadge, BFormSelect, BTable, BAlert, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton,
+  BForm, BBadge, BFormSelect, BTable, BAlert, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BPagination,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from '../Pagination/code'
 
 export default {
   components: {
@@ -234,6 +242,7 @@ export default {
     BDropdown,
     // eslint-disable-next-line vue/no-unused-components
     BAlert,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -278,6 +287,10 @@ export default {
       ],
       selected: null,
       value: ['apple', 'orange'],
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
     }
   },
   mounted() {

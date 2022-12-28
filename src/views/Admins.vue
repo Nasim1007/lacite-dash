@@ -301,10 +301,10 @@ export default {
           label: 'Email',
           sortable: true,
         },
-        {
-          key: 'actions',
-          label: 'Действия',
-        },
+        // {
+        //   key: 'actions',
+        //   label: 'Действия',
+        // },
       ],
       admin: {
         id: '',

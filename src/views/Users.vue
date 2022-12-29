@@ -1,11 +1,10 @@
 <template>
   <b-card>
-    <b-row>
-      <b-col
+    <!-- <b-row> -->
+    <!-- <b-col
         md="3"
         class="mb-1"
       >
-        <!-- button on right -->
         <b-input-group>
           <b-form-input placeholder="Фильтр..." />
           <b-input-group-append>
@@ -14,8 +13,8 @@
             </b-button>
           </b-input-group-append>
         </b-input-group>
-      </b-col>
-      <!-- <b-col md="9">
+      </b-col> -->
+    <!-- <b-col md="9">
           <b-button
             v-ripple.400="'rgba(255, 159, 67, 0.15)'"
             v-b-modal.modal-add
@@ -24,7 +23,7 @@
             Добавить
           </b-button>
         </b-col> -->
-    </b-row>
+    <!-- </b-row> -->
     <b-table
       responsive="sm"
       :items="users"
@@ -57,6 +56,7 @@
         </template> -->
     </b-table>
     <b-pagination
+      v-if="row >= perPage"
       v-model="currentPage"
       hide-goto-end-buttons
       :total-rows="rows"
@@ -75,13 +75,7 @@ import {
   //   BAvatar,
   BButton,
   BCard,
-  BCol,
-  BFormInput,
-  BInputGroup,
-  BInputGroupAppend,
-  BRow,
   BTable,
-  //   BFormFile,
   VBModal,
   BPagination,
 } from 'bootstrap-vue'
@@ -92,16 +86,9 @@ import { codeSeparated } from './Pagination/code'
 
 export default {
   components: {
-    // BFormFile,
-    // BAvatar,
-    BFormInput,
     BButton,
     BTable,
     BCard,
-    BInputGroup,
-    BInputGroupAppend,
-    BRow,
-    BCol,
     BPagination,
   },
   directives: {

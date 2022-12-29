@@ -4,19 +4,25 @@
       <b-row
         class="d-flex align-items-center justify-content-between"
       >
-        <!-- <b-col
+        <b-col
           md="3"
           class="m-1"
         >
           <b-input-group>
-            <b-form-input placeholder="Фильтр" />
+            <b-form-input
+              v-model="searchValue"
+              placeholder="Фильтр"
+            />
             <b-input-group-append>
-              <b-button variant="outline-primary">
+              <b-button
+                variant="outline-primary"
+                @click="getProducts"
+              >
                 Поиск
               </b-button>
             </b-input-group-append>
           </b-input-group>
-        </b-col> -->
+        </b-col>
         <b-col
           md="3"
           class="m-1"
@@ -115,6 +121,18 @@
     />
   </b-card>
 </template>
+<!-- <template>
+  <div>
+    <b-form-checkbox v-model="loading" switch>
+      Switch Loading Status
+    </b-form-checkbox>
+    <div v-if="!loading" class="py-3">
+      <h3>Loading</h3>
+      <p>Loading can show the loading state icon.</p>
+    </div>
+    <b-loading :show="loading"></b-loading>
+  </div>
+</template> -->
 
 <script>
 import {
@@ -130,6 +148,12 @@ import {
   BFormSelect,
   BPagination,
   BFormFile,
+  BFormInput,
+  BInputGroup,
+  BInputGroupAppend,
+  BFormCheckbox,
+  BLoading,
+
 } from 'bootstrap-vue'
 // import MyDiolog from '@/@core/components/MyDiolog.vue'
 import Ripple from 'vue-ripple-directive'
@@ -158,6 +182,11 @@ export default {
     BModal,
     BCol,
     BPagination,
+    BFormInput,
+    BInputGroup,
+    BInputGroupAppend,
+    BFormCheckbox,
+    BLoading,
 
   },
   directives: {
@@ -178,6 +207,8 @@ export default {
         // { key: 'image', label: 'Картинка' },
         { key: 'actions', label: 'Действия' },
       ],
+      loading: false,
+      searchValue: '',
       codeSeparated,
       currentPage: 1,
       perPage: '',
@@ -200,7 +231,7 @@ export default {
       this.dialogVisible = true
     },
     getProducts(page) {
-      axios.get(`${$themeConfig.app.API}v2/admin/products?page=${page}`, {
+      axios.get(`${$themeConfig.app.API}v2/admin/products${this.searchValue ? `?search=${this.searchValue}&` : '?'}page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

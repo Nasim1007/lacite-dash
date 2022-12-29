@@ -93,6 +93,25 @@
             </b-col>
             <b-col cols="12">
               <b-form-group
+                label="Тип"
+                label-for="text"
+              >
+                <validation-provider
+                  #default="{ errors }"
+                  name="type"
+                  rules="required"
+                >
+                  <b-form-input
+                    id="text"
+                    v-model="banner.type"
+                    placeholder="Тип"
+                  />
+                  <small class="text-danger">{{ errors[0] }}</small>
+                </validation-provider>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group
                 label="Актив"
                 label-for="text"
               >
@@ -162,6 +181,14 @@
         </validation-observer>
       </b-modal>
     </div>
+    <b-pagination
+      v-if="rows >= perPage"
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getBrands"
+    />
   </b-card>
 </template>
 
@@ -169,12 +196,13 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
 import {
-  BFormSelect, BCardText, BCardCode, BTable, BForm, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton,
+  BFormSelect, BCardText, BCardCode, BTable, BForm, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BPagination,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from './Pagination/code'
 
 export default {
   components: {
@@ -199,6 +227,7 @@ export default {
     BModal,
     BDropdown,
     BFormSelect,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -241,11 +270,19 @@ export default {
         image: '',
         type: '',
         is_active: '',
+        description: '',
+        link: '',
+        link_name: '',
+        title: '',
       },
       options: [
         { value: '1', text: 'True' },
         { value: '0', text: 'False' },
       ],
+      codeSeparated,
+      currentPage: 1,
+      rows: 14,
+      perPage: 15,
     }
   },
   mounted() {
@@ -253,7 +290,7 @@ export default {
   },
   methods: {
     getBanners() {
-      axios.get(`${$themeConfig.app.API}web/banners/slider`)
+      axios.get(`${$themeConfig.app.API}v2/admin/banners`)
         .then(res => {
           this.banners = res.data.data
         })

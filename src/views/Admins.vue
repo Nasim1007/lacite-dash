@@ -231,7 +231,14 @@
         </b-form>
       </validation-observer>
     </b-modal>
-
+    <b-pagination
+      v-if="rows >= perPage"
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getAdmins"
+    />
   </b-card>
 
 </template>
@@ -250,10 +257,12 @@ import {
   BRow,
   BTable,
   VBModal,
+  BPagination,
 } from 'bootstrap-vue'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from './Pagination/code'
 
 export default {
   components: {
@@ -269,6 +278,7 @@ export default {
     BModal,
     BRow,
     BCol,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -313,10 +323,14 @@ export default {
         phone: '',
         file: '',
       },
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
     }
   },
   mounted() {
-    this.getAdmins()
+    this.getAdmins(1)
   },
   methods: {
     validationForm() {
@@ -327,14 +341,16 @@ export default {
         }
       })
     },
-    getAdmins() {
-      axios.get(`${$themeConfig.app.API}v2/admin/admins`, {
+    getAdmins(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/admins?page=${page}&per_page=${this.perPage}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then(res => {
-          this.items = res.data.data
+          this.items = res.data.data.data
+          this.rows = res.data.total
+          this.perPage = res.data.per_page
         })
         .catch(er => {
           console.log(er)

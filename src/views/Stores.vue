@@ -132,7 +132,7 @@
                 </validation-provider>
               </b-form-group>
             </b-col>
-              <b-col cols="12">
+            <b-col cols="12">
               <b-form-group>
                 <b-form-file
                   v-model="store.file"
@@ -156,7 +156,7 @@
         @ok="handleOk"
         @hidden="resetModal"
       >
-      <validation-observer ref="simpleRules">
+        <validation-observer ref="simpleRules">
           <b-row>
             <b-col cols="12">
               <b-form-group
@@ -215,7 +215,7 @@
                 </validation-provider>
               </b-form-group>
             </b-col>
-              <b-col cols="12">
+            <b-col cols="12">
               <b-form-group>
                 <b-form-file
                   v-model="store.file"
@@ -230,6 +230,14 @@
         </validation-observer>
       </b-modal>
     </div>
+    <b-pagination
+      v-if="rows >= perPage"
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getStores"
+    />
   </b-card>
 </template>
 
@@ -237,13 +245,14 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
 import {
-  BTable, BCard, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton,
+  BTable, BCard, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BPagination,
 
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { codeSeparated } from './Pagination/code'
 
 export default {
   components: {
@@ -260,6 +269,7 @@ export default {
     BCol,
     BButton,
     BModal,
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -303,17 +313,22 @@ export default {
         street: '',
         file: '',
       },
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 15,
     }
   },
   mounted() {
-    this.getStores()
+    this.getStores(1)
   },
   methods: {
-    getStores() {
-      axios.get(`${$themeConfig.app.API}v2/admin/stores`)
+    getStores(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/stores?page=${page}&per_page=${this.perPage}`)
         .then(res => {
           this.stores = res.data.data
-          console.log('store', this.stores)
+          this.rows = res.data.total
+          this.perPage = res.data.per_page
         })
         .catch(er => {
           console.log(er)

@@ -271,7 +271,7 @@ export default {
       })
     },
     getCategories() {
-      axios.get(`${$themeConfig.app.API}v2/admin/categories?per_page=200`, {
+      axios.get(`${$themeConfig.app.API}v2/admin/all_categories`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

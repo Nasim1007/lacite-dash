@@ -35,20 +35,11 @@
       >
         <template
           #cell(items)="data"
-          text-field="items"
+          text-field="items.length"
+          class="text-center"
         >
-          <div class="text-nowrap}">
-            <b-badge
-              v-for="item in data.item.items"
-              :key="item.id"
-              variant="warning"
-              class="badge-glow mr-1 d-flex wrap"
-            >
-              {{ item.item_id }}
-            </b-badge>
-          </div>
+          <p>{{ console.log(data.items) }}</p>
         </template>
-
         <template v-slot:cell(actions)="data">
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -62,12 +53,19 @@
 
       </b-table>
     </b-card>
+    <b-pagination
+      v-if="rows >= perPage"
+      v-model="currentPage"
+      hide-goto-end-buttons
+      :total-rows="rows"
+      :per-page="perPage"
+      @input="getOrders"
+    />
   </b-card>
 </template>
 
 <script>
 import {
-  BBadge,
   BButton,
   BCol,
   BModal,
@@ -76,10 +74,12 @@ import {
   VBModal,
   BCard,
   BFormSelect,
+  BPagination,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import axios from 'axios'
+import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
+import { codeSeparated } from './Pagination/code'
 
 export default {
 
@@ -88,14 +88,13 @@ export default {
     VBModal,
     // eslint-disable-next-line vue/no-unused-components
     BModal,
-    BBadge,
     BTable,
     BRow,
     BCol,
     BCard,
     BButton,
     BFormSelect,
-
+    BPagination,
   },
   directives: {
     'b-modal': VBModal,
@@ -112,10 +111,13 @@ export default {
         { key: 'shipping_type', label: 'Доставка', sortable: true },
         // { key: 'discount', label: 'Скидка' },
         // { key: 'total', label: 'Итог' },
-        { key: 'user.address', label: 'Адрес' },
+        { key: 'user.address', label: 'Город  ' },
         { key: 'user.phone', label: 'Телефон' },
         { key: 'status_name', label: 'Статус' },
-        { key: 'items', label: 'Товары' },
+        {
+          key: 'items.length',
+          label: 'Кол. товары',
+        },
         { key: 'actions', label: 'Действия' },
       ],
       selected: null,
@@ -128,22 +130,25 @@ export default {
         { value: 'completed', text: 'Успешно завершено' },
         { value: 'cancelled', text: 'Отмена заявки' },
       ],
+      codeSeparated,
+      currentPage: 1,
+      rows: 50,
+      perPage: 13,
     }
   },
   mounted() {
-    this.getOrders()
+    this.getOrders(1)
   },
   methods: {
     showVisible() {
       this.dialogVisible = true
     },
-    getOrders() {
-      axios.get(`${$themeConfig.app.API}v2/admin/orders${this.selected === null ? '' : `?status=${this.selected}`}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      }).then(res => {
+    getOrders(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/orders${this.selected === null ? '?' : `?status=${this.selected}&`}per_page=${this.perPage}&page=${page}`).then(res => {
         this.orders = res.data.data
+        this.rows = res.data.meta.total
+        this.perPage = res.data.meta.per_page
+        console.log(res.meta)
       }).catch(er => {
         console.log(er)
       })

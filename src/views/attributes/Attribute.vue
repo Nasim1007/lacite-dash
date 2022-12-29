@@ -144,6 +144,7 @@
       </validation-observer>
     </b-modal>
     <b-pagination
+      v-if="rows >= perPage"
       v-model="currentPage"
       hide-goto-end-buttons
       :total-rows="rows"

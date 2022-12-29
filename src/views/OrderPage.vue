@@ -3,7 +3,7 @@
 <template>
   <b-card>
     <b-card-body>
-      <b-row>
+      <b-row class="border-bottom-secondary mb-1">
         <b-col>
           <h4>Скидка</h4>
         </b-col>
@@ -11,7 +11,7 @@
           <h4>{{ order.discount }}%</h4>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="border-bottom-secondary mb-1">
         <b-col>
           <h4>Способ доставка</h4>
         </b-col>
@@ -19,15 +19,15 @@
           <h4>{{ order.shipping_type }}</h4>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="border-bottom-secondary mb-1">
         <b-col>
           <h4>Способ оплата</h4>
         </b-col>
         <b-col class="right">
-          <h4>{{ order.payment_method_id }}</h4>
+          <h4>{{ order.payment.name }}</h4>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="border-bottom-secondary mb-1">
         <b-col>
           <h4>Итог</h4>
         </b-col>
@@ -35,7 +35,7 @@
           <h4>{{ order.total }} TJS</h4>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row style="margin-bottom: 8px;" class="border-bottom-secondary">
         <b-col>
           <h4>Итог со скидка</h4>
         </b-col>
@@ -43,68 +43,82 @@
           <h4>{{ order.sub_total }} TJS</h4>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="mb-1 border-bottom-secondary align-items-center">
         <b-col>
           <h4>Статус</h4>
         </b-col>
         <b-col class="right">
-          <h4>{{ order.status_name }}</h4>
+          <!-- <h4>{{ order.status_name }}</h4> -->
+          <b-form-select
+            v-model="order.status_id"
+            text-field="name"
+            value-field="id"
+            style="margin-bottom: 8px;"
+            @change="onChange"
+          >
+            <option
+              :value="null"
+              disabled
+            >
+              Статус заявки
+            </option>
+            <option
+              v-for="status in this.order.statuses"
+              :value="status.id"
+            >
+              {{ status.name }}
+            </option>
+          </b-form-select>
         </b-col>
       </b-row>
-      <b-form-group>
-
-        <b-form-select
-          v-if="order.statuses"
-          v-model="order.status_id"
-          text-field="name"
-          value-field="id"
-          @change="onChange"
-        >
-          <option
-            :value="null"
-            disabled
-          />
-          <option
-            v-for="status in this.order.statuses"
-            :value="status.id"
-          >
-            {{ status.name }}
-          </option>
-        </b-form-select>
-        <b-row class="mt-1">
+      <b-row class="mb-1 border-bottom-secondary">
+        <b-col>
+          <h4>Имя</h4>
+        </b-col>
+        <b-col class="right">
+          <h4>{{ order.user.name }}</h4>
+        </b-col>
+      </b-row>
+      <b-row class="mb-1 border-bottom-secondary">
+        <b-col>
+          <h4>Номер телефон</h4>
+        </b-col>
+        <b-col class="right">
+          <h4>{{ order.user.phone }}</h4>
+        </b-col>
+      </b-row>
+      <!-- <b-row>
           <b-col>
-            <h4>Имя</h4>
-          </b-col>
-          <b-col class="right">
-            <h4>{{ order.user.name }}</h4>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <h4>Номер телефон</h4>
-          </b-col>
-          <b-col class="right">
-            <h4>{{ order.user.phone }}</h4>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <h4>Адрес доставка</h4>
+            <h4>Город</h4>
           </b-col>
           <b-col class="right">
             <h4>{{ order.user.address }}</h4>
           </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <h4>Дата</h4>
-          </b-col>
-          <b-col class="right">
-            <h4>{{ new Date(order.updated_at).toLocaleString() }}</h4>
-          </b-col>
-        </b-row>
-
-      </b-form-group>
+        </b-row> -->
+      <b-row class="mb-1 border-bottom-secondary">
+        <b-col>
+          <h4>Адрес доставка</h4>
+        </b-col>
+        <b-col class="right">
+          <h4>{{ order.shipping_address }}</h4>
+        </b-col>
+      </b-row>
+      <b-row class="mb-1 border-bottom-secondary">
+        <b-col>
+          <h4>Дата</h4>
+        </b-col>
+        <b-col class="right">
+          <h4>{{ new Date(order.updated_at).toLocaleString() }}</h4>
+        </b-col>
+      </b-row>
+      <b-row class="border-bottom-secondary">
+        <b-col>
+          <h4>Комментария</h4>
+        </b-col>
+        <b-col class="right">
+          <h4>{{ order.comment }}</h4>
+        </b-col>
+      </b-row>
     </b-card-body>
     <b-table
       responsive="sm"
@@ -119,7 +133,6 @@ import {
   BCardBody,
   BCard,
   BCol,
-  BFormGroup,
   BRow,
   BTable,
   BFormSelect,
@@ -133,7 +146,6 @@ import 'quill/dist/quill.bubble.css'
 
 export default {
   components: {
-    BFormGroup,
     BCardBody,
     BCol,
     BRow,
@@ -151,6 +163,7 @@ export default {
         discount: '',
         payment_method_id: '',
         shipping_type: '',
+        shipping_address: '',
         status_key: '',
         status_id: '',
         status_name: '',
@@ -223,7 +236,6 @@ export default {
       await axios.get(`${$themeConfig.app.API}v2/admin/orders/${this.$route.params.id}`).then(res => {
         this.order = res.data.data
         this.items = this.order.items
-        console.log('res', res.data.data)
       }).catch(er => {
         console.log(er)
       })

@@ -275,11 +275,12 @@
       </validation-observer>
     </b-modal>
     <b-pagination
+      v-if="rows >= perPage"
       v-model="currentPage"
       hide-goto-end-buttons
       :total-rows="rows"
       :per-page="perPage"
-      @input="getBrands"
+      @input="getReviews"
     />
   </b-card>
 
@@ -401,7 +402,7 @@ export default {
     }
   },
   mounted() {
-    this.getReviews()
+    this.getReviews(1)
   },
   methods: {
     validationForm() {
@@ -412,8 +413,8 @@ export default {
         }
       })
     },
-    getReviews() {
-      axios.get(`${$themeConfig.app.API}v2/admin/reviews`)
+    getReviews(page) {
+      axios.get(`${$themeConfig.app.API}v2/admin/reviews?page=${page}&per_page=${this.perPage}`)
         .then(res => {
           this.reviews = res.data.data
           this.rows = res.data.meta.total

@@ -1,157 +1,170 @@
 <template>
-  <b-card>
-    <b-col>
-      <b-button
-        v-ripple.400="'rgba(255, 159, 67, 0.15)'"
-        v-b-modal.modal-warningadd
-        variant="outline-warning"
-        class="m-1"
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-card
+      v-if="!show"
+    >
+      <b-col>
+        <b-button
+          v-ripple.400="'rgba(255, 159, 67, 0.15)'"
+          v-b-modal.modal-warningadd
+          variant="outline-warning"
+          class="m-1"
+        >
+          Добавить
+        </b-button>
+      </b-col>
+      <b-table
+        responsive="sm"
+        :items="attributes"
+        :fields="tableColumns"
       >
-        Добавить
-      </b-button>
-    </b-col>
-    <b-table
-      responsive="sm"
-      :items="attributes"
-      :fields="tableColumns"
-    >
-      <template #cell(attributes_value)="data">
-        <div class="text-nowrap scroll">
-          <b-badge
-            v-for="item in data.item.values"
-            :key="item.id"
-            variant="success"
-            class="badge-glow mr-1"
-          >
-            {{ item.name }}
-          </b-badge>
-        </div>
+        <template #cell(attributes_value)="data">
+          <div class="text-nowrap scroll">
+            <b-badge
+              v-for="item in data.item.values"
+              :key="item.id"
+              variant="success"
+              class="badge-glow mr-1"
+            >
+              {{ item.name }}
+            </b-badge>
+          </div>
 
-      </template>
-      <template v-slot:cell(actions)="data">
-        <b-button
-          v-b-modal.modal-warning-edit
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="warning"
-          class="btn-icon mr-1"
-          @click="edit(data.item)"
-        >
-          <feather-icon icon="Edit2Icon" />
-        </b-button>
-        <b-button
-          variant="gradient-danger"
-          class="btn-icon"
-          @click="confirmDelete(data.item)"
-        >
-          <feather-icon icon="TrashIcon" />
-        </b-button>
-      </template>
-    </b-table>
-    <b-modal
-      id="modal-warning-edit"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Редактировать"
-      @hidden="resetModal"
-      @ok="handleOk"
-      @prevent="validationForm"
-    >
-      <validation-observer ref="simpleRules">
-        <b-form>
-          <b-row>
-            <b-col cols="12">
-              <b-form-group
-                label="Название Аттрибута"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Название"
-                  rules="required"
+        </template>
+        <template v-slot:cell(actions)="data">
+          <b-button
+            v-b-modal.modal-warning-edit
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="warning"
+            class="btn-icon mr-1"
+            @click="edit(data.item)"
+          >
+            <feather-icon icon="Edit2Icon" />
+          </b-button>
+          <b-button
+            variant="gradient-danger"
+            class="btn-icon"
+            @click="confirmDelete(data.item)"
+          >
+            <feather-icon icon="TrashIcon" />
+          </b-button>
+        </template>
+      </b-table>
+      <b-modal
+        id="modal-warning-edit"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Редактировать"
+        @hidden="resetModal"
+        @ok="handleOk"
+        @prevent="validationForm"
+      >
+        <validation-observer ref="simpleRules">
+          <b-form>
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Название Аттрибута"
+                  label-for="largeInput"
                 >
-                  <b-form-input
-                    id="largeInput"
-                    v-model="attribute.name"
-                    size="lg"
-                    placeholder="Название Аттрибута"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="slug"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Slug"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Название"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="largeInput"
+                      v-model="attribute.name"
+                      size="lg"
+                      placeholder="Название Аттрибута"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="slug"
+                  label-for="largeInput"
                 >
-                  <b-form-input
-                    id="slugInput"
-                    v-model="attribute.slug"
-                    size="lg"
-                    placeholder="Slug"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-form>
-      </validation-observer>
-    </b-modal>
-    <b-modal
-      id="modal-warningadd"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Добавить"
-      @hidden="resetModal"
-      @ok="add"
-      @prevent="validationForm"
-    >
-      <validation-observer ref="simpleRules">
-        <b-form>
-          <b-row>
-            <b-col cols="12">
-              <b-form-group
-                label="Название Аттрибута"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Название"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Slug"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="slugInput"
+                      v-model="attribute.slug"
+                      size="lg"
+                      placeholder="Slug"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form>
+        </validation-observer>
+      </b-modal>
+      <b-modal
+        id="modal-warningadd"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Добавить"
+        @hidden="resetModal"
+        @ok="add"
+        @prevent="validationForm"
+      >
+        <validation-observer ref="simpleRules">
+          <b-form>
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Название Аттрибута"
+                  label-for="largeInput"
                 >
-                  <b-form-input
-                    id="largeInput"
-                    v-model="attribute.name"
-                    size="lg"
-                    placeholder="Название Аттрибута"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-form>
-      </validation-observer>
-    </b-modal>
-    <b-pagination
-      v-if="rows >= perPage"
-      v-model="currentPage"
-      hide-goto-end-buttons
-      :total-rows="rows"
-      :per-page="perPage"
-      @input="getAttribute"
-    />
-  </b-card>
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Название"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="largeInput"
+                      v-model="attribute.name"
+                      size="lg"
+                      placeholder="Название Аттрибута"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form>
+        </validation-observer>
+      </b-modal>
+      <b-pagination
+        v-if="rows >= perPage"
+        v-model="currentPage"
+        hide-goto-end-buttons
+        :total-rows="rows"
+        :per-page="perPage"
+        @input="getAttribute"
+      />
+    </b-card>
+  </div>
 </template>
 
 <script>
@@ -168,6 +181,7 @@ import {
   BBadge,
   BForm,
   BPagination,
+  BSpinner,
 } from 'bootstrap-vue'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
@@ -192,6 +206,7 @@ export default {
     BButton,
     BBadge,
     BPagination,
+    BSpinner,
   },
   directives: {
     'b-modal': VBModal,
@@ -250,6 +265,7 @@ export default {
         name: '',
         slug: '',
       },
+      show: true,
       codeSeparated,
       currentPage: 1,
       rows: 50,
@@ -339,6 +355,7 @@ export default {
       this.attribute.slug = ''
     },
     getAttribute(page) {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/attributes?per_page=${this.perPage}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -348,9 +365,11 @@ export default {
           this.attributes = res.data.data
           this.rows = res.data.total
           this.perPage = res.data.per_page
+          this.show = false
         })
         .catch(er => {
           console.log(er)
+          this.show = false
         })
     },
     async add() {

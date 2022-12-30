@@ -1,7 +1,19 @@
 <template>
-  <b-card>
-    <b-row>
-      <!-- <b-col
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-card
+      v-if="!show"
+    >
+      <b-row>
+        <!-- <b-col
         md="3"
         class="mb-1"
       >
@@ -14,276 +26,276 @@
           </b-input-group-append>
         </b-input-group>
       </b-col> -->
-      <b-col md="9">
-        <b-button
-          v-ripple.400="'rgba(255, 159, 67, 0.15)'"
-          v-b-modal.modal-add
-          variant="outline-warning"
-        >
-          Добавить
-        </b-button>
-      </b-col>
-    </b-row>
-    <b-table
-      responsive="sm"
-      :items="reviews"
-      :fields="tableColumns"
-    >
-      <template v-slot:cell(actions)="data">
-        <b-button
-          v-b-modal.modal-warning-edit
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="warning"
-          class="btn-icon mr-1"
-          @click="edit(data.item)"
-        >
-          <feather-icon icon="Edit2Icon" />
-        </b-button>
-        <b-button
-          variant="gradient-danger"
-          class="btn-icon"
-          @click="confirmDelete(data.item)"
-        >
-          <feather-icon icon="TrashIcon" />
-        </b-button>
-      </template>
-      <template #cell(image)="data">
-        <b-avatar
-          v-if="data.item.image"
-          class="mr-1"
-          :src="data.item.image"
-        />
-      </template>
-    </b-table>
-    <b-modal
-      id="modal-add"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Добавление отзыв"
-      @hidden="resetModal"
-      @ok="add"
-    >
-      <validation-observer ref="simpleRules">
-        <b-col cols="12">
-
-          <label for="input-default">Имя </label>
-          <b-form-group>
-            <validation-provider
-              #default="{ errors }"
-              name="Имя"
-              rules="required"
-            >
-              <b-form-input
-                id="input-default"
-                v-model="review.name"
-                placeholder="Имя"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
-
-          <!--      <label for="brand-img">Лого бренда</label>-->
-          <!--      <b-form-file-->
-          <!--        id="brand-img"-->
-          <!--        placeholder="Choose a file or drop it here..."-->
-          <!--        drop-placeholder="Drop file here..."-->
-          <!--        multiple-->
-          <!--      />--></b-col>
-        <b-col cols="12">
-          <b-form-group
-            label="Описание"
-            label-for="largeInput"
+        <b-col md="9">
+          <b-button
+            v-ripple.400="'rgba(255, 159, 67, 0.15)'"
+            v-b-modal.modal-add
+            variant="outline-warning"
           >
-            <validation-provider
-              #default="{ errors }"
-              name="Описание"
-              rules="required"
-            >
-              <b-form-input
-                id="largeInput"
-                v-model="review.content"
-                size="lg"
-                placeholder="Описание"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
+            Добавить
+          </b-button>
         </b-col>
-        <b-col cols="12">
-          <b-form-group
-            label="Оценка"
-            label-for="largeInput"
+      </b-row>
+      <b-table
+        responsive="sm"
+        :items="reviews"
+        :fields="tableColumns"
+      >
+        <template v-slot:cell(actions)="data">
+          <b-button
+            v-b-modal.modal-warning-edit
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="warning"
+            class="btn-icon mr-1"
+            @click="edit(data.item)"
           >
-            <validation-provider
-              #default="{ errors }"
-              name="rate"
-              rules="required"
-            >
-              <b-form-input
-                id="slugInput"
-                v-model="review.rate"
-                size="lg"
-                placeholder="Оценка"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
-          <b-form-group
-            label="Пол"
-            label-for="largeInput"
+            <feather-icon icon="Edit2Icon" />
+          </b-button>
+          <b-button
+            variant="gradient-danger"
+            class="btn-icon"
+            @click="confirmDelete(data.item)"
           >
-            <b-form-select
-              v-model="review.gender"
-              :options="options"
-            />
-          </b-form-group>
-          <b-form-group
-            label="Достижения"
-            label-for="largeInput"
-          >
-            <validation-provider
-              #default="{ errors }"
-              name="position"
-              rules="required"
-            >
-              <b-form-input
-                id="slugInput"
-                v-model="review.position"
-                size="lg"
-                placeholder="Достижения"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
-          <b-form-group
-            label="Изображения"
-            label-for="largeInput"
-          >
-            <b-form-file
-              v-model="review.image"
-              size="lg"
-              placeholder="Выберите изображение..."
-            />
-          </b-form-group>
+            <feather-icon icon="TrashIcon" />
+          </b-button>
+        </template>
+        <template #cell(image)="data">
+          <b-avatar
+            v-if="data.item.image"
+            class="mr-1"
+            :src="data.item.image"
+          />
+        </template>
+      </b-table>
+      <b-modal
+        id="modal-add"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Добавление отзыв"
+        @hidden="resetModal"
+        @ok="add"
+      >
+        <validation-observer ref="simpleRules">
+          <b-col cols="12">
 
-        </b-col>
-      </validation-observer>
-    </b-modal>
-
-    <b-modal
-      id="modal-warning-edit"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Редактировать"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
-      <validation-observer ref="simpleRules">
-        <b-form>
-          <b-row>
-            <b-col cols="12">
-              <b-form-group
-                label="Имя"
-                label-for="largeInput"
+            <label for="input-default">Имя </label>
+            <b-form-group>
+              <validation-provider
+                #default="{ errors }"
+                name="Имя"
+                rules="required"
               >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Имя"
-                  rules="required"
-                >
-                  <b-form-input
-                    id="largeInput"
-                    v-model="review.name"
-                    size="lg"
-                    placeholder="Имя"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-              <b-form-group
-                label="Описание"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Описание "
-                  rules="required"
-                >
-                  <b-form-input
-                    id="largeInput"
-                    v-model="review.content"
-                    size="lg"
-                    placeholder="Описание"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="Оцента"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="rate"
-                  rules="required"
-                >
-                  <b-form-input
-                    id="slugInput"
-                    v-model="review.rate"
-                    size="lg"
-                    placeholder="Оценка"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-              <b-form-group
-                label="Пол"
-                label-for="largeInput"
-              >
-                <b-form-select
-                  v-model="review.gender"
-                  :options="options"
+                <b-form-input
+                  id="input-default"
+                  v-model="review.name"
+                  placeholder="Имя"
                 />
-              </b-form-group>
-              <b-form-group
-                label="Достижения"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="position"
-                  rules="required"
-                >
-                  <b-form-input
-                    id="slugInput"
-                    v-model="review.position"
-                    size="lg"
-                    placeholder="Достижения"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-form>
-      </validation-observer>
-    </b-modal>
-    <b-pagination
-      v-if="rows >= perPage"
-      v-model="currentPage"
-      hide-goto-end-buttons
-      :total-rows="rows"
-      :per-page="perPage"
-      @input="getReviews"
-    />
-  </b-card>
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
 
+            <!--      <label for="brand-img">Лого бренда</label>-->
+            <!--      <b-form-file-->
+            <!--        id="brand-img"-->
+            <!--        placeholder="Choose a file or drop it here..."-->
+            <!--        drop-placeholder="Drop file here..."-->
+            <!--        multiple-->
+            <!--      />--></b-col>
+          <b-col cols="12">
+            <b-form-group
+              label="Описание"
+              label-for="largeInput"
+            >
+              <validation-provider
+                #default="{ errors }"
+                name="Описание"
+                rules="required"
+              >
+                <b-form-input
+                  id="largeInput"
+                  v-model="review.content"
+                  size="lg"
+                  placeholder="Описание"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
+            <b-form-group
+              label="Оценка"
+              label-for="largeInput"
+            >
+              <validation-provider
+                #default="{ errors }"
+                name="rate"
+                rules="required"
+              >
+                <b-form-input
+                  id="slugInput"
+                  v-model="review.rate"
+                  size="lg"
+                  placeholder="Оценка"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+            <b-form-group
+              label="Пол"
+              label-for="largeInput"
+            >
+              <b-form-select
+                v-model="review.gender"
+                :options="options"
+              />
+            </b-form-group>
+            <b-form-group
+              label="Достижения"
+              label-for="largeInput"
+            >
+              <validation-provider
+                #default="{ errors }"
+                name="position"
+                rules="required"
+              >
+                <b-form-input
+                  id="slugInput"
+                  v-model="review.position"
+                  size="lg"
+                  placeholder="Достижения"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+            <b-form-group
+              label="Изображения"
+              label-for="largeInput"
+            >
+              <b-form-file
+                v-model="review.image"
+                size="lg"
+                placeholder="Выберите изображение..."
+              />
+            </b-form-group>
+
+          </b-col>
+        </validation-observer>
+      </b-modal>
+
+      <b-modal
+        id="modal-warning-edit"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Редактировать"
+        @hidden="resetModal"
+        @ok="handleOk"
+      >
+        <validation-observer ref="simpleRules">
+          <b-form>
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Имя"
+                  label-for="largeInput"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Имя"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="largeInput"
+                      v-model="review.name"
+                      size="lg"
+                      placeholder="Имя"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+                <b-form-group
+                  label="Описание"
+                  label-for="largeInput"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Описание "
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="largeInput"
+                      v-model="review.content"
+                      size="lg"
+                      placeholder="Описание"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="Оцента"
+                  label-for="largeInput"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="rate"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="slugInput"
+                      v-model="review.rate"
+                      size="lg"
+                      placeholder="Оценка"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+                <b-form-group
+                  label="Пол"
+                  label-for="largeInput"
+                >
+                  <b-form-select
+                    v-model="review.gender"
+                    :options="options"
+                  />
+                </b-form-group>
+                <b-form-group
+                  label="Достижения"
+                  label-for="largeInput"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="position"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="slugInput"
+                      v-model="review.position"
+                      size="lg"
+                      placeholder="Достижения"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form>
+        </validation-observer>
+      </b-modal>
+      <b-pagination
+        v-if="rows >= perPage"
+        v-model="currentPage"
+        hide-goto-end-buttons
+        :total-rows="rows"
+        :per-page="perPage"
+        @input="getReviews"
+      />
+    </b-card>
+  </div>
 </template>
 
 <script>
@@ -305,6 +317,7 @@ import {
   BFormSelect,
   BPagination,
   BAvatar,
+  BSpinner,
 } from 'bootstrap-vue'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
@@ -328,6 +341,7 @@ export default {
     BFormSelect,
     BPagination,
     BAvatar,
+    BSpinner,
   },
   directives: {
     'b-modal': VBModal,
@@ -340,6 +354,7 @@ export default {
       username: '',
       required,
       reviews: [],
+      show: true,
       tableColumns: [
         {
           key: 'id',
@@ -414,14 +429,17 @@ export default {
       })
     },
     getReviews(page) {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/reviews?page=${page}&per_page=${this.perPage}`)
         .then(res => {
           this.reviews = res.data.data
           this.rows = res.data.meta.total
           this.perPage = res.data.meta.per_page
+          this.show = false
         })
         .catch(er => {
           console.log(er)
+          this.show = false
         })
     },
     async add() {

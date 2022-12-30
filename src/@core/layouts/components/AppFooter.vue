@@ -4,7 +4,7 @@
       COPYRIGHT  © {{ new Date().getFullYear() }}
       <b-link
         class="ml-25"
-        href="lacite.tj"
+        href="https://lacite.tj"
         target="_blank"
       >LA CITE</b-link>
       <span class="d-none d-sm-inline-block">, All rights Reserved</span>

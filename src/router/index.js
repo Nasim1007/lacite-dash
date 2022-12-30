@@ -167,6 +167,24 @@ const router = new VueRouter({
       },
     },
     {
+      path: '/attribute/product-type',
+      name: 'product-type',
+      // eslint-disable-next-line import/extensions
+      component: () => import('@/views/products/ProductType'),
+      meta: {
+        pageTitle: 'Атрибута',
+        requiresAuth: true,
+        breadcrumb: [
+          {
+            text: 'Тип товар',
+            active: true,
+            resource: 'Auth',
+            action: 'read',
+          },
+        ],
+      },
+    },
+    {
       path: '/ForWho',
       name: 'ForWho',
       component: () => import('@/views/ForWho.vue'),

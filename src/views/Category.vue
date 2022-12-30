@@ -1,173 +1,186 @@
 <template>
-  <b-card>
-    <div>
-      <b-button
-        v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-        v-b-modal.modal-primaryadd
-        variant="outline-primary"
-        class="m-1"
-      >
-        Добавить
-      </b-button>
-      <b-table
-        responsive="sm"
-        :items="items"
-        :fields="tableColumns"
-      >
-        <template #cell(icon)="data">
-          <b-avatar
-            v-if="data.item.icon"
-            class="mr-1"
-            :src="`${IMG_URL}${data.item.icon}`"
-          />
-        </template>
-        <template #cell(actions)="data">
-          <div class="text-nowrap">
-            <b-button
-              id="gradient-primaryy"
-              v-b-modal.modal-primaryedit
-              class="btn-icon mr-1"
-              variant="gradient-primary"
-              @click="edit(data.item)"
-            >
-              <feather-icon icon="EditIcon" />
-            </b-button>
-            <b-button
-              class="btn-icon"
-              variant="gradient-danger"
-              @click="confirmDelete(data.item)"
-            >
-              <feather-icon icon="TrashIcon" />
-            </b-button>
-            <b-dropdown
-              :right="$store.state.appConfig.isRTL"
-              no-caret
-              toggle-class="p-0"
-              variant="link"
-            />
-          </div>
-        </template>
-        <template
-          #cell(for_who)="data"
-          text-field="name"
-        >
-          <div class="text-nowrap">
-            <b-badge
-              variant="warning"
-              class="badge-glow"
-            >
-              {{ data && data.item && data.item.for_who && data.item.for_who.id && data.item.for_who.name }}
-            </b-badge>
-          </div>
-        </template>
-      </b-table>
-      <b-modal
-        id="modal-primaryadd"
-        ok-title="Сохранить"
-        cancel-title="Закрыть"
-        modal-class="modal-primary"
-        centered
-        title="Добавление"
-        @ok="add"
-        @hidden="resetModal"
-      >
-        <b-row>
-          <b-col cols="12">
-            <b-form-group>
-              <b-form-file
-                v-model="category.file"
-                size="lg"
-                placeholder="Выберите изображение..."
-                drop-placeholder="Slide..."
-              />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group
-              label="Название"
-              label-for="text"
-            >
-              <b-form-input
-                id="text"
-                v-model="category.name"
-                placeholder="Название"
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-      </b-modal>
-      <b-modal
-        id="modal-primaryedit"
-        ok-title="Сохранить"
-        cancel-title="Закрыть"
-        modal-class="modal-primary"
-        centered
-        title="Редактирование"
-        @hidden="resetModal"
-        @ok="handleOk"
-      >
-        <validation-observer ref="simpleRules">
-          <b-form>
-            <b-row>
-              <b-col cols="12">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Название"
-                    rules="required"
-                  >
-                    <b-form-file
-                      v-model="category.file"
-                      size="lg"
-                      placeholder="Выберите изображение..."
-                      drop-placeholder="Slide..."
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col cols="12">
-                <b-form-group
-                  label="Название"
-                  label-for="text"
-                >
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Название"
-                    rules="required"
-                  >
-                    <b-form-input
-                      id="text"
-                      v-model="category.name"
-                      placeholder="Название"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col cols="12">
-                <b-form-group label="Для кого">
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Для кого"
-                    rules="required"
-                  >
-                    <b-form-select
-                      v-model="category.for_whos_id"
-                      :options="options"
-                      text-field="name"
-                      value-field="id"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-            </b-row>
-          </b-form>
-        </validation-observer>
-      </b-modal>
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
     </div>
-  </b-card>
+    <b-card>
+      <div
+        v-if="!show"
+      >
+        <b-button
+          v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+          v-b-modal.modal-primaryadd
+          variant="outline-primary"
+          class="m-1"
+        >
+          Добавить
+        </b-button>
+        <b-table
+          responsive="sm"
+          :items="items"
+          :fields="tableColumns"
+        >
+          <template #cell(icon)="data">
+            <b-avatar
+              v-if="data.item.icon"
+              class="mr-1"
+              :src="`${IMG_URL}${data.item.icon}`"
+            />
+          </template>
+          <template #cell(actions)="data">
+            <div class="text-nowrap">
+              <b-button
+                id="gradient-primaryy"
+                v-b-modal.modal-primaryedit
+                class="btn-icon mr-1"
+                variant="gradient-primary"
+                @click="edit(data.item)"
+              >
+                <feather-icon icon="EditIcon" />
+              </b-button>
+              <b-button
+                class="btn-icon"
+                variant="gradient-danger"
+                @click="confirmDelete(data.item)"
+              >
+                <feather-icon icon="TrashIcon" />
+              </b-button>
+              <b-dropdown
+                :right="$store.state.appConfig.isRTL"
+                no-caret
+                toggle-class="p-0"
+                variant="link"
+              />
+            </div>
+          </template>
+          <template
+            #cell(for_who)="data"
+            text-field="name"
+          >
+            <div class="text-nowrap">
+              <b-badge
+                variant="warning"
+                class="badge-glow"
+              >
+                {{ data && data.item && data.item.for_who && data.item.for_who.id && data.item.for_who.name }}
+              </b-badge>
+            </div>
+          </template>
+        </b-table>
+        <b-modal
+          id="modal-primaryadd"
+          ok-title="Сохранить"
+          cancel-title="Закрыть"
+          modal-class="modal-primary"
+          centered
+          title="Добавление"
+          @ok="add"
+          @hidden="resetModal"
+        >
+          <b-row>
+            <b-col cols="12">
+              <b-form-group>
+                <b-form-file
+                  v-model="category.file"
+                  size="lg"
+                  placeholder="Выберите изображение..."
+                  drop-placeholder="Slide..."
+                />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group
+                label="Название"
+                label-for="text"
+              >
+                <b-form-input
+                  id="text"
+                  v-model="category.name"
+                  placeholder="Название"
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-modal>
+        <b-modal
+          id="modal-primaryedit"
+          ok-title="Сохранить"
+          cancel-title="Закрыть"
+          modal-class="modal-primary"
+          centered
+          title="Редактирование"
+          @hidden="resetModal"
+          @ok="handleOk"
+        >
+          <validation-observer ref="simpleRules">
+            <b-form>
+              <b-row>
+                <b-col cols="12">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Название"
+                      rules="required"
+                    >
+                      <b-form-file
+                        v-model="category.file"
+                        size="lg"
+                        placeholder="Выберите изображение..."
+                        drop-placeholder="Slide..."
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col cols="12">
+                  <b-form-group
+                    label="Название"
+                    label-for="text"
+                  >
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Название"
+                      rules="required"
+                    >
+                      <b-form-input
+                        id="text"
+                        v-model="category.name"
+                        placeholder="Название"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col cols="12">
+                  <b-form-group label="Для кого">
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Для кого"
+                      rules="required"
+                    >
+                      <b-form-select
+                        v-model="category.for_whos_id"
+                        :options="options"
+                        text-field="name"
+                        value-field="id"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-form>
+          </validation-observer>
+        </b-modal>
+      </div>
+    </b-card>
+  </div>
 </template>
 
 <script>
@@ -175,6 +188,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 // eslint-disable-next-line no-unused-vars
 import { required } from '@validations'
 import {
+  BSpinner,
   BCardCode, BFormSelect, BTable, BForm, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BAvatar, BBadge,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
@@ -204,6 +218,7 @@ export default {
     BModal,
     BDropdown,
     BAvatar,
+    BSpinner,
   },
   directives: {
     'b-modal': VBModal,
@@ -216,6 +231,7 @@ export default {
       options: [],
       IMG_URL: $themeConfig.app.IMG_URL,
       items: [],
+      show: true,
       tableColumns: [
         {
           key: 'id',
@@ -271,6 +287,7 @@ export default {
       })
     },
     getCategories() {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/all_categories`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -278,9 +295,11 @@ export default {
       })
         .then(res => {
           this.items = res.data
+          this.show = false
         })
         .catch(er => {
           console.log(er)
+          this.show = false
         })
     },
     getWho() {

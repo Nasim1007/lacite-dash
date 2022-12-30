@@ -1,430 +1,361 @@
 <template>
-  <b-tabs
-    vertical
-    nav-wrapper-class="nav-vertical"
-  >
-    <b-tab
-      active
-      title="Главная"
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
     >
-      <b-card>
-        <b-form>
-          <b-row>
-            <validation-observer ref="simpleRules">
-              <b-col md="6">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Наименование товара"
-                    rules="required"
-                  >
-                    <label for="Product name-default">Наименование товара</label>
-                    <b-form-input
-                      v-model="product.name"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="Наименование товара"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Кастомный URL (Slug)"
-                    rules="required"
-                  >
-                    <label for="Optional-default">Кастомный URL (Slug)</label>
-                    <b-form-input
-                      v-model="product.slug"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="Кастомный URL (Slug)"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Артикул"
-                    rules="required"
-                  >
-                    <label for="SKU-default">Артикуль</label>
-                    <b-form-input
-                      v-model="product.sku"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="Серийный номер"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-tabs
+      v-if="!show"
+      vertical
+      nav-wrapper-class="nav-vertical"
+    >
+      <b-tab
+        active
+        title="Главная"
+      >
+        <b-card>
+          <b-form>
+            <b-row>
+              <validation-observer ref="simpleRules">
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Наименование товара"
+                      rules="required"
+                    >
+                      <label for="Product name-default">Наименование товара</label>
+                      <b-form-input
+                        v-model="product.name"
+                        :state="errors.length > 0 ? false : null"
+                        placeholder="Наименование товара"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Кастомный URL (Slug)"
+                      rules="required"
+                    >
+                      <label for="Optional-default">Кастомный URL (Slug)</label>
+                      <b-form-input
+                        v-model="product.slug"
+                        :state="errors.length > 0 ? false : null"
+                        placeholder="Кастомный URL (Slug)"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Артикул"
+                      rules="required"
+                    >
+                      <label for="SKU-default">Артикуль</label>
+                      <b-form-input
+                        v-model="product.sku"
+                        :state="errors.length > 0 ? false : null"
+                        placeholder="Серийный номер"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
 
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Цена"
-                    rules="required"
-                  >
-                    <label for="Price-default">Цена</label>
-                    <b-form-input
-                      v-model="product.price"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="Цена"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Кол-во"
-                    rules="required"
-                  >
-                    <label for="Quantity-default">Кол-во</label>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Цена"
+                      rules="required"
+                    >
+                      <label for="Price-default">Цена</label>
+                      <b-form-input
+                        v-model="product.price"
+                        :state="errors.length > 0 ? false : null"
+                        placeholder="Цена"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Кол-во"
+                      rules="required"
+                    >
+                      <label for="Quantity-default">Кол-во</label>
 
-                    <b-form-input
-                      v-model="product.quantity"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="Кол-во"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Бренд"
-                    rules="required"
-                  >
-                    <label for="select-default">Бренд</label>
-                    <b-form-select
-                      id="select-default"
-                      v-model="product.brand.id"
-                      :options="brands"
-                      value-field="id"
-                      text-field="name"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="12">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="фото"
-                    rules="required"
-                  >
-                    <label for="Quantity-default">Фото</label>
-                    <div class="dropbox">
-                      <input
-                        type="file"
-                        :name="uploadFieldName"
-                        accept="image/*"
-                        class="input-file"
-                        @change="previewImage"
-                      >
-                      <p>
-                        Drag your file(s) here to begin<br> or click to browse
-                      </p>
+                      <b-form-input
+                        v-model="product.quantity"
+                        :state="errors.length > 0 ? false : null"
+                        placeholder="Кол-во"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Бренд"
+                      rules="required"
+                    >
+                      <label for="select-default">Бренд</label>
+                      <b-form-select
+                        id="select-default"
+                        v-model="product.brand.id"
+                        :options="brands"
+                        value-field="id"
+                        text-field="name"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="12">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="фото"
+                      rules="required"
+                    >
+                      <label for="Quantity-default">Фото</label>
+                      <div class="dropbox">
+                        <input
+                          type="file"
+                          :name="uploadFieldName"
+                          accept="image/*"
+                          class="input-file"
+                          @change="previewImage"
+                        >
+                        <p>
+                          Drag your file(s) here to begin<br> or click to browse
+                        </p>
 
-                    </div>
-                    <div v-if="product.image!== ''">
-                      <img
-                        height="200px"
-                        :src="product.image"
-                      >
-                    </div>
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
+                      </div>
+                      <div v-if="product.image!== ''">
+                        <img
+                          height="200px"
+                          :src="product.image"
+                        >
+                      </div>
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Скидка"
+                      rules="required"
+                    >
+                      <label for="select-default_dis">Скидка</label>
+                      <b-form-select
+                        id="select-default_dis"
+                        v-model="product.discount_id"
+                        :options="discount_id"
+                        value-field="id"
+                        text-field="name"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Процент скидки"
+                      rules="required"
+                    >
+                      <label for="Quantity-default">Процент скидки</label>
+
+                      <b-form-input
+                        v-model="product.discount_percent"
+                        type="number"
+                        :state="errors.length > 0 ? false : null"
+                        placeholder="Кол-во"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-button
+                    v-if="product.image !== ''"
+                    class="w-20"
+                    variant="danger"
+                    type="submit"
+                    @click="removeImage"
+                  >
+                    удалить
+                  </b-button>
+
+                </b-col>
+
+                <b-col md="12">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Категории"
+                      rules="required"
+                    >
+                      <label for="Quantity-default">Категории</label>
+                      <v-select
+                        v-model="product.categories"
+                        :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
+                        multiple
+                        label="name"
+                        :options="categories"
+                        :reduce="category => category.id"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col md="12">
                   <validation-provider
                     #default="{ errors }"
-                    name="Скидка"
+                    name="Описание"
                     rules="required"
                   >
-                    <label for="select-default_dis">Скидка</label>
-                    <b-form-select
-                      id="select-default_dis"
-                      v-model="product.discount_id"
-                      :options="discount_id"
-                      value-field="id"
-                      text-field="name"
+                    <label for="textarea-default">Описание</label>
+                    <b-form-textarea
+                      id="textarea-default"
+                      v-model="product.description"
+                      placeholder="Описание"
+                      rows="2"
+                      size="4"
                     />
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
+                </b-col>
+                <b-col md="12">
                   <validation-provider
                     #default="{ errors }"
-                    name="Процент скидки"
+                    name="Состав"
                     rules="required"
                   >
-                    <label for="Quantity-default">Процент скидки</label>
+                    <b-card-code title="Состав">
+                      <!-- <b-card-text></b-card-text> -->
 
-                    <b-form-input
-                      v-model="product.discount_percent"
-                      type="number"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="Кол-во"
-                    />
+                      <quill-editor
+                        v-model="product.compound"
+                        :options="editorOption"
+                      />
+                      <template #code>
+                        {{ codeBubble }}
+                      </template>
+                    </b-card-code>
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-button
-                  v-if="product.image !== ''"
-                  class="w-20"
-                  variant="danger"
-                  type="submit"
-                  @click="removeImage"
-                >
-                  удалить
-                </b-button>
-
-              </b-col>
-
-              <b-col md="12">
-                <b-form-group>
-                  <validation-provider
-                    #default="{ errors }"
-                    name="Категории"
-                    rules="required"
-                  >
-                    <label for="Quantity-default">Категории</label>
-                    <v-select
-                      v-model="product.categories"
-                      :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
-                      multiple
-                      label="name"
-                      :options="categories"
-                      :reduce="category => category.id"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="12">
+                </b-col>
                 <validation-provider
                   #default="{ errors }"
-                  name="Описание"
+                  name="Характеристики"
                   rules="required"
                 >
-                  <label for="textarea-default">Описание</label>
-                  <b-form-textarea
-                    id="textarea-default"
-                    v-model="product.description"
-                    placeholder="Описание"
-                    rows="2"
-                    size="4"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-col>
-              <b-col md="12">
-                <validation-provider
-                  #default="{ errors }"
-                  name="Состав"
-                  rules="required"
-                >
-                  <b-card-code title="Состав">
-                    <!-- <b-card-text></b-card-text> -->
-
+                  <b-card-code title="характеристики">
                     <quill-editor
-                      v-model="product.compound"
+                      v-model="product.characteristics"
                       :options="editorOption"
                     />
                     <template #code>
                       {{ codeBubble }}
                     </template>
+
                   </b-card-code>
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
-              </b-col>
-              <validation-provider
-                #default="{ errors }"
-                name="Характеристики"
-                rules="required"
-              >
-                <b-card-code title="характеристики">
-                  <quill-editor
-                    v-model="product.characteristics"
-                    :options="editorOption"
-                  />
-                  <template #code>
-                    {{ codeBubble }}
-                  </template>
+                <!-- submit button -->
+                <b-col md="12">
+                  <b-button
+                    class="w-100 mt-3"
+                    variant="primary"
+                    type="submit"
+                    @click.prevent="edit"
+                    @disabled="addStatus"
+                  >
+                    Изменить
+                  </b-button>
+                </b-col>
 
-                </b-card-code>
-                <small class="text-danger">{{ errors[0] }}</small>
-              </validation-provider>
-              <!-- submit button -->
-              <b-col md="12">
-                <b-button
-                  class="w-100 mt-3"
-                  variant="primary"
-                  type="submit"
-                  @click.prevent="edit"
-                  @disabled="addStatus"
-                >
-                  Изменить
-                </b-button>
-              </b-col>
+              </validation-observer>
+            </b-row>
+          </b-form>
+        </b-card>
+      </b-tab>
+      <b-tab title="Галерея изображений">
 
-            </validation-observer>
-          </b-row>
-        </b-form>
-      </b-card>
-    </b-tab>
-    <b-tab title="Галерея изображений">
-
-      <div
-        v-for="(item, index) in product.images"
-        :key="index"
-      >
-        <span class="">
-          <img
-            height="200px"
-            :src="item.url"
-          >
-
-          <b-button
-            variant="gradient-danger"
-            class="btn-icon"
-            @click="removeImagesByID(item.id)"
-          >
-            <feather-icon icon="TrashIcon" />
-          </b-button>
-        </span>
-      </div>
-      <div class="dropbox">
-        <input
-          type="file"
-          multiple
-          :name="uploadFieldName"
-          accept="image/*"
-          class="input-file"
-          @change="previewMultiImage"
+        <div
+          v-for="(item, index) in product.images"
+          :key="index"
         >
-        <p>
-          Drag your file(s) here to begin<br> or click to browse
-        </p>
+          <span class="">
+            <img
+              height="200px"
+              :src="item.url"
+            >
 
-      </div>
-      <div
-        v-for="(item, index) in images"
-        :key="index"
-      >
-        <span class="">
-          <img
-            height="200px"
-            :src="item"
+            <b-button
+              variant="gradient-danger"
+              class="btn-icon"
+              @click="removeImagesByID(item.id)"
+            >
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </span>
+        </div>
+        <div class="dropbox">
+          <input
+            type="file"
+            multiple
+            :name="uploadFieldName"
+            accept="image/*"
+            class="input-file"
+            @change="previewMultiImage"
           >
+          <p>
+            Drag your file(s) here to begin<br> or click to browse
+          </p>
 
-          <b-button
-            variant="gradient-danger"
-            class="btn-icon"
-            @click="removeImages(index)"
-          >
-            <feather-icon icon="TrashIcon" />
-          </b-button>
-        </span>
-      </div>
-      <b-col
-        md="6"
-        class="pt-2"
-      >
-        <b-button
-          variant="primary"
-          class="primary"
-          @click="uploadImage"
+        </div>
+        <div
+          v-for="(item, index) in images"
+          :key="index"
         >
-          Загрузить
-        </b-button>
-      </b-col>
-    </b-tab>
-    <b-tab title="Атрибуты размеры и цвета">
-      <b-card>
-        <b-form>
-          <b-row>
-            <b-col md="6">
-              <b-form-group>
-                <label for="Quantity-default">Атрибуты</label>
-                <b-form-select v-model="values">
-                  <option
-                    :value="null"
-                    disabled
-                  >
-                    -- Please select an option --
-                  </option>
-                  // eslint-disable-next-line vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key,
-                  vue/require-v-for-key, vue/require-v-for-key
-                  <option
-                    v-for="attribute in attributes"
-                    :value="attribute"
-                  >
-                    {{ attribute.name }}
-                  </option>
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-form>
-      </b-card>
+          <span class="">
+            <img
+              height="200px"
+              :src="item"
+            >
 
-      <b-card>
-        <b-form>
-          <b-row>
-            <b-col md="6">
-              <b-form-group>
-                <label for="Quantity-default">Добавить атрибуты к продукту</label>
-                <b-form-select v-model="attribute">
-                  <option :value="values.values.name">
-                    {{ values.values.name }}
-                  </option>
-                  <option
-                    v-for="attribute in values.values"
-                    :value="attribute"
-                  >
-                    {{ attribute.name }}
-                  </option>
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-form>
-        <b-col md="6">
-          <label for="Quantity-default">Кол-во</label>
-          <b-form-input
-            v-model="kol"
-            :state="errors.length > 0 ? false : null"
-            placeholder="Кол-во"
-          />
-        </b-col>
-        <b-col md="6">
-          <label for="Price-default">Цена</label>
-          <b-form-input
-            v-model="price"
-            :state="errors.length > 0 ? false : null"
-            placeholder="Цена"
-          />
-
-        </b-col>
+            <b-button
+              variant="gradient-danger"
+              class="btn-icon"
+              @click="removeImages(index)"
+            >
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </span>
+        </div>
         <b-col
           md="6"
           class="pt-2"
@@ -432,40 +363,120 @@
           <b-button
             variant="primary"
             class="primary"
-            @click="addAttributes"
+            @click="uploadImage"
           >
-            Добавить
+            Загрузить
           </b-button>
         </b-col>
-      </b-card>
-      <b-card>
-        <b-form>
-          <b-row>
-            <b-col md="12">
-              <h2>Аттрибуты продукта</h2>
-              <b-table
-                striped
-                hover
-                :items="product.attributes"
-                :fields="fields"
-              >
-                <template v-slot:cell(actions)="{ item }">
-                  <b-button
-                    variant="gradient-danger"
-                    class="btn-icon"
-                    @click="removeAttribute(item.id)"
-                  >
-                    <feather-icon icon="TrashIcon" />
-                  </b-button>
-                </template>
-              </b-table>
-            </b-col>
-          </b-row>
-        </b-form>
-      </b-card>
-    </b-tab>
-  </b-tabs>
+      </b-tab>
+      <b-tab title="Атрибуты размеры и цвета">
+        <b-card>
+          <b-form>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label for="Quantity-default">Атрибуты</label>
+                  <b-form-select v-model="values">
+                    <option
+                      :value="null"
+                      disabled
+                    >
+                      -- Please select an option --
+                    </option>
+                    // eslint-disable-next-line vue/require-v-for-key, vue/require-v-for-key, vue/require-v-for-key,
+                    vue/require-v-for-key, vue/require-v-for-key
+                    <option
+                      v-for="attribute in attributes"
+                      :value="attribute"
+                    >
+                      {{ attribute.name }}
+                    </option>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form>
+        </b-card>
 
+        <b-card>
+          <b-form>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label for="Quantity-default">Добавить атрибуты к продукту</label>
+                  <b-form-select v-model="attribute">
+                    <option :value="values.values.name">
+                      {{ values.values.name }}
+                    </option>
+                    <option
+                      v-for="attribute in values.values"
+                      :value="attribute"
+                    >
+                      {{ attribute.name }}
+                    </option>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form>
+          <b-col md="6">
+            <label for="Quantity-default">Кол-во</label>
+            <b-form-input
+              v-model="kol"
+              :state="errors.length > 0 ? false : null"
+              placeholder="Кол-во"
+            />
+          </b-col>
+          <b-col md="6">
+            <label for="Price-default">Цена</label>
+            <b-form-input
+              v-model="price"
+              :state="errors.length > 0 ? false : null"
+              placeholder="Цена"
+            />
+
+          </b-col>
+          <b-col
+            md="6"
+            class="pt-2"
+          >
+            <b-button
+              variant="primary"
+              class="primary"
+              @click="addAttributes"
+            >
+              Добавить
+            </b-button>
+          </b-col>
+        </b-card>
+        <b-card>
+          <b-form>
+            <b-row>
+              <b-col md="12">
+                <h2>Аттрибуты продукта</h2>
+                <b-table
+                  striped
+                  hover
+                  :items="product.attributes"
+                  :fields="fields"
+                >
+                  <template v-slot:cell(actions)="{ item }">
+                    <b-button
+                      variant="gradient-danger"
+                      class="btn-icon"
+                      @click="removeAttribute(item.id)"
+                    >
+                      <feather-icon icon="TrashIcon" />
+                    </b-button>
+                  </template>
+                </b-table>
+              </b-col>
+            </b-row>
+          </b-form>
+        </b-card>
+      </b-tab>
+    </b-tabs>
+  </div>
 </template>
 
 <script>
@@ -485,6 +496,7 @@ import {
   BTab,
   BTable,
   BTabs,
+  BSpinner,
 } from 'bootstrap-vue'
 // import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
@@ -521,6 +533,8 @@ export default {
     BTable,
     quillEditor,
     BCardCode,
+    BSpinner,
+
   },
   data() {
     return {
@@ -535,6 +549,7 @@ export default {
           ],
         },
       },
+      show: true,
       uploadFieldName: 'Загрузка файлов',
       fields: ['id',
         { key: 'type.name', label: 'Тип атрибута' },
@@ -764,6 +779,7 @@ export default {
       this.images.splice(id, 1)
     },
     async getProduct() {
+      this.show = true
       await axios.get(`${$themeConfig.app.API}v2/admin/products/${this.$route.params.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -772,8 +788,10 @@ export default {
         this.product = res.data.data
         this.product.categories = res.data.data.categories.map(x => x.id)
         this.product.discount_id = res.data.data.discount ? res.data.data.discount.id : ''
+        this.show = false
       }).catch(er => {
         console.log(er)
+        this.show = false
       })
     },
     async getAttribute() {

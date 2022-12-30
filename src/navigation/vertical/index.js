@@ -17,6 +17,10 @@ export default [
         title: 'Значение атрибута',
         route: 'AttributeValue',
       },
+      {
+        title: 'Тип товар',
+        route: 'product-type',
+      },
     ],
   },
   {

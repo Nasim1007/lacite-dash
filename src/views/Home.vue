@@ -1,81 +1,93 @@
 <template>
-  <b-card>
-    <b-card>
-      <b-row
-        class="d-flex align-items-center justify-content-between"
-      >
-        <b-col
-          md="3"
-          class="m-1"
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-card
+      v-if="!show"
+    >
+      <b-card>
+        <b-row
+          class="d-flex align-items-center justify-content-between"
         >
-          <b-input-group>
-            <b-form-input
-              v-model="searchValue"
-              placeholder="Фильтр"
-            />
-            <b-input-group-append>
+          <b-col
+            md="3"
+            class="m-1"
+          >
+            <b-input-group>
+              <b-form-input
+                v-model="searchValue"
+                placeholder="Фильтр"
+              />
+              <b-input-group-append>
+                <b-button
+                  variant="outline-primary"
+                  @click="getProducts"
+                >
+                  Поиск
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-col>
+          <b-col
+            md="3"
+            class="m-1"
+          >
+            <router-link
+              to="/product/add/"
+            >
               <b-button
-                variant="outline-primary"
-                @click="getProducts"
+                v-ripple.400="'rgba(255, 159, 67, 0.15)'"
+                v-b-modal.modal-warning
+                variant="outline-warning"
               >
-                Поиск
+                Добавить
               </b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </b-col>
-        <b-col
-          md="3"
-          class="m-1"
-        >
-          <router-link
-            to="/product/add/"
+            </router-link>
+          </b-col>
+          <b-col
+            md="3"
           >
             <b-button
               v-ripple.400="'rgba(255, 159, 67, 0.15)'"
-              v-b-modal.modal-warning
+              v-b-modal.modal-import
               variant="outline-warning"
             >
-              Добавить
+              Импорт товаров
             </b-button>
-          </router-link>
-        </b-col>
-        <b-col
-          md="3"
+          </b-col>
+        </b-row>
+
+        <b-table
+          responsive="sm"
+          :items="products"
+          :fields="tableColumns"
         >
-          <b-button
-            v-ripple.400="'rgba(255, 159, 67, 0.15)'"
-            v-b-modal.modal-import
-            variant="outline-warning"
-          >
-            Импорт товаров
-          </b-button>
-        </b-col>
-      </b-row>
 
-      <b-table
-        responsive="sm"
-        :items="products"
-        :fields="tableColumns"
-      >
+          <template v-slot:cell(actions)="data">
+            <b-button
+              v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+              variant="warning"
+              class="btn-icon mr-1"
+              :to="{ name: 'edit-product', params: { id: data.item.id } }"
+            >
+              <feather-icon icon="Edit2Icon" />
+            </b-button>
 
-        <template v-slot:cell(actions)="data">
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="warning"
-            class="btn-icon mr-1"
-            :to="{ name: 'edit-product', params: { id: data.item.id } }"
-          >
-            <feather-icon icon="Edit2Icon" />
-          </b-button>
-
-          <b-button
-            variant="gradient-danger"
-            class="btn-icon"
-            @click="confirmDelete(data.item)"
-          >
-            <feather-icon icon="TrashIcon" />
-          </b-button>
-        </template>
+            <b-button
+              variant="gradient-danger"
+              class="btn-icon"
+              @click="confirmDelete(data.item)"
+            >
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </template>
         <!-- <template #cell(image)="data">
           <img
             v-if="data.item.image"
@@ -85,41 +97,42 @@
             height="40"
           >
         </template> -->
-      </b-table>
+        </b-table>
+      </b-card>
+      <b-modal
+        id="modal-import"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Импорт товаров"
+        @hidden="resetModal"
+        @ok="importFile"
+      >
+        <b-form>
+          <b-row>
+            <b-col cols="12">
+              <label for="brand-img">Лого бренда</label>
+              <b-form-group>
+                <b-form-file
+                  v-model="file"
+                  size="lg"
+                  placeholder="Выберите файл..."
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-form>
+      </b-modal>
+      <b-pagination
+        v-model="currentPage"
+        hide-goto-end-buttons
+        :total-rows="rows"
+        :per-page="perPage"
+        @input="getProducts"
+      />
     </b-card>
-    <b-modal
-      id="modal-import"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Импорт товаров"
-      @hidden="resetModal"
-      @ok="importFile"
-    >
-      <b-form>
-        <b-row>
-          <b-col cols="12">
-            <label for="brand-img">Лого бренда</label>
-            <b-form-group>
-              <b-form-file
-                v-model="file"
-                size="lg"
-                placeholder="Выберите файл..."
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-      </b-form>
-    </b-modal>
-    <b-pagination
-      v-model="currentPage"
-      hide-goto-end-buttons
-      :total-rows="rows"
-      :per-page="perPage"
-      @input="getProducts"
-    />
-  </b-card>
+  </div>
 </template>
 <!-- <template>
   <div>
@@ -151,8 +164,7 @@ import {
   BFormInput,
   BInputGroup,
   BInputGroupAppend,
-  BFormCheckbox,
-  BLoading,
+  BSpinner,
 
 } from 'bootstrap-vue'
 // import MyDiolog from '@/@core/components/MyDiolog.vue'
@@ -185,9 +197,7 @@ export default {
     BFormInput,
     BInputGroup,
     BInputGroupAppend,
-    BFormCheckbox,
-    BLoading,
-
+    BSpinner,
   },
   directives: {
     'b-modal': VBModal,
@@ -207,7 +217,7 @@ export default {
         // { key: 'image', label: 'Картинка' },
         { key: 'actions', label: 'Действия' },
       ],
-      loading: false,
+      show: true,
       searchValue: '',
       codeSeparated,
       currentPage: 1,
@@ -231,6 +241,7 @@ export default {
       this.dialogVisible = true
     },
     getProducts(page) {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/products${this.searchValue ? `?search=${this.searchValue}&` : '?'}page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -240,8 +251,10 @@ export default {
         this.rows = res.data.total
         this.currentPage = res.data.current_page
         this.perPage = res.data.per_page
+        this.show = false
       }).catch(er => {
         console.log(er)
+        this.show = false
       })
     },
     confirmDelete(data) {

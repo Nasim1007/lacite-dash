@@ -1,7 +1,19 @@
 <template>
-  <b-card>
-    <!-- <b-row> -->
-    <!-- <b-col
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-card
+      v-if="!show"
+    >
+      <!-- <b-row> -->
+      <!-- <b-col
         md="3"
         class="mb-1"
       >
@@ -14,7 +26,7 @@
           </b-input-group-append>
         </b-input-group>
       </b-col> -->
-    <!-- <b-col md="9">
+      <!-- <b-col md="9">
           <b-button
             v-ripple.400="'rgba(255, 159, 67, 0.15)'"
             v-b-modal.modal-add
@@ -23,30 +35,30 @@
             Добавить
           </b-button>
         </b-col> -->
-    <!-- </b-row> -->
-    <b-table
-      responsive="sm"
-      :items="users"
-      :fields="tableColumns"
-    >
-      <template v-slot:cell(actions)="data">
-        <b-button
-          v-b-modal.modal-warning-edit
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="warning"
-          class="btn-icon mr-1"
-          @click="edit(data.item)"
-        >
-          <feather-icon icon="Edit2Icon" />
-        </b-button>
-        <b-button
-          variant="gradient-danger"
-          class="btn-icon"
-          @click="confirmDelete(data.item)"
-        >
-          <feather-icon icon="TrashIcon" />
-        </b-button>
-      </template>
+      <!-- </b-row> -->
+      <b-table
+        responsive="sm"
+        :items="users"
+        :fields="tableColumns"
+      >
+        <template v-slot:cell(actions)="data">
+          <b-button
+            v-b-modal.modal-warning-edit
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="warning"
+            class="btn-icon mr-1"
+            @click="edit(data.item)"
+          >
+            <feather-icon icon="Edit2Icon" />
+          </b-button>
+          <b-button
+            variant="gradient-danger"
+            class="btn-icon"
+            @click="confirmDelete(data.item)"
+          >
+            <feather-icon icon="TrashIcon" />
+          </b-button>
+        </template>
       <!-- <template #cell(logo)="data">
           <b-avatar
             v-if="data.item.logo"
@@ -54,17 +66,17 @@
             :src="`${IMG_URL}${data.item.logo}`"
           />
         </template> -->
-    </b-table>
-    <b-pagination
-      v-if="row >= perPage"
-      v-model="currentPage"
-      hide-goto-end-buttons
-      :total-rows="rows"
-      :per-page="perPage"
-      @input="getUsers"
-    />
-  </b-card>
-
+      </b-table>
+      <b-pagination
+        v-if="row >= perPage"
+        v-model="currentPage"
+        hide-goto-end-buttons
+        :total-rows="rows"
+        :per-page="perPage"
+        @input="getUsers"
+      />
+    </b-card>
+  </div>
 </template>
 
 <script>
@@ -78,6 +90,7 @@ import {
   BTable,
   VBModal,
   BPagination,
+  BSpinner,
 } from 'bootstrap-vue'
 import axios from 'axios'
 import { $themeConfig } from '@themeConfig'
@@ -90,6 +103,7 @@ export default {
     BTable,
     BCard,
     BPagination,
+    BSpinner,
   },
   directives: {
     'b-modal': VBModal,
@@ -102,6 +116,7 @@ export default {
       username: '',
       required,
       users: [],
+      show: true,
       tableColumns: [
         {
           key: 'id',
@@ -162,6 +177,7 @@ export default {
       })
     },
     getUsers(page) {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/users?per_page=${this.perPage}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -171,9 +187,11 @@ export default {
           this.users = res.data.data
           this.rows = res.data.meta.total
           this.perPage = res.data.meta.per_page
+          this.show = false
         })
         .catch(er => {
           console.log(er)
+          this.show = false
         })
     },
     resetModal() {

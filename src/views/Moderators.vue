@@ -1,20 +1,30 @@
 <template>
-  <b-card>
-    <b-row>
-      <b-col
-        md="3"
-        class="mb-1"
-      >
-        <!-- button on right -->
-        <b-input-group>
-          <b-form-input placeholder="Фильтр..." />
-          <b-input-group-append>
-            <b-button variant="outline-primary">
-              Поиск
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </b-col>
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-card>
+      <b-row>
+        <b-col
+          md="3"
+          class="mb-1"
+        >
+          <!-- button on right -->
+          <b-input-group>
+            <b-form-input placeholder="Фильтр..." />
+            <b-input-group-append>
+              <b-button variant="outline-primary">
+                Поиск
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-col>
       <!-- <b-col md="9">
         <b-button
           v-ripple.400="'rgba(255, 159, 67, 0.15)'"
@@ -24,30 +34,30 @@
           Добавить
         </b-button>
       </b-col> -->
-    </b-row>
-    <b-table
-      responsive="sm"
-      :items="items"
-      :fields="tableColumns"
-    >
-      <template v-slot:cell(actions)="data">
-        <b-button
-          v-b-modal.modal-warning-edit
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="warning"
-          class="btn-icon mr-1"
-          @click="edit(data.item)"
-        >
-          <feather-icon icon="Edit2Icon" />
-        </b-button>
-        <b-button
-          variant="gradient-danger"
-          class="btn-icon"
-          @click="confirmDelete(data.item)"
-        >
-          <feather-icon icon="TrashIcon" />
-        </b-button>
-      </template>
+      </b-row>
+      <b-table
+        responsive="sm"
+        :items="items"
+        :fields="tableColumns"
+      >
+        <template v-slot:cell(actions)="data">
+          <b-button
+            v-b-modal.modal-warning-edit
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="warning"
+            class="btn-icon mr-1"
+            @click="edit(data.item)"
+          >
+            <feather-icon icon="Edit2Icon" />
+          </b-button>
+          <b-button
+            variant="gradient-danger"
+            class="btn-icon"
+            @click="confirmDelete(data.item)"
+          >
+            <feather-icon icon="TrashIcon" />
+          </b-button>
+        </template>
       <!-- <template #cell(logo)="data">
         <b-avatar
           v-if="data.item.logo"
@@ -55,83 +65,83 @@
           :src="`${IMG_URL}${data.item.logo}`"
         />
       </template> -->
-    </b-table>
-    <b-modal
-      id="modal-add"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Добавление админ"
-      @hidden="resetModal"
-      @ok="add"
-    >
-      <validation-observer ref="simpleRules">
-        <b-col cols="12">
+      </b-table>
+      <b-modal
+        id="modal-add"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Добавление админ"
+        @hidden="resetModal"
+        @ok="add"
+      >
+        <validation-observer ref="simpleRules">
+          <b-col cols="12">
 
-          <label for="input-default">Имя</label>
-          <b-form-group>
-            <validation-provider
-              #default="{ errors }"
-              name="Имя"
-              rules="required"
-            >
-              <b-form-input
-                id="input-default"
-                v-model="admin.name"
-                placeholder="Имя Админ"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
+            <label for="input-default">Имя</label>
+            <b-form-group>
+              <validation-provider
+                #default="{ errors }"
+                name="Имя"
+                rules="required"
+              >
+                <b-form-input
+                  id="input-default"
+                  v-model="admin.name"
+                  placeholder="Имя Админ"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
 
-          <!--      <label for="brand-img">Лого бренда</label>-->
-          <!--      <b-form-file-->
-          <!--        id="brand-img"-->
-          <!--        placeholder="Choose a file or drop it here..."-->
-          <!--        drop-placeholder="Drop file here..."-->
-          <!--        multiple-->
-          <!--      />--></b-col>
-        <b-col cols="12">
-          <b-form-group
-            label="Email Aдмин"
-            label-for="largeInput"
-          >
-            <validation-provider
-              #default="{ errors }"
-              name="Email admin"
-              rules="required"
+            <!--      <label for="brand-img">Лого бренда</label>-->
+            <!--      <b-form-file-->
+            <!--        id="brand-img"-->
+            <!--        placeholder="Choose a file or drop it here..."-->
+            <!--        drop-placeholder="Drop file here..."-->
+            <!--        multiple-->
+            <!--      />--></b-col>
+          <b-col cols="12">
+            <b-form-group
+              label="Email Aдмин"
+              label-for="largeInput"
             >
-              <b-form-input
-                id="largeInput"
-                v-model="admin.email"
-                size="lg"
-                placeholder="Email admin"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
-        </b-col>
-        <b-col cols="12">
-          <b-form-group
-            label="Телефон"
-            label-for="largeInput"
-          >
-            <validation-provider
-              #default="{ errors }"
-              name="phone"
-              rules="required"
+              <validation-provider
+                #default="{ errors }"
+                name="Email admin"
+                rules="required"
+              >
+                <b-form-input
+                  id="largeInput"
+                  v-model="admin.email"
+                  size="lg"
+                  placeholder="Email admin"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
+            <b-form-group
+              label="Телефон"
+              label-for="largeInput"
             >
-              <b-form-input
-                id="slugInput"
-                v-model="admin.phone"
-                size="lg"
-                placeholder="Телефон"
-              />
-              <small class="text-danger">{{ errors[0] }}</small>
-            </validation-provider>
-          </b-form-group>
-        </b-col>
+              <validation-provider
+                #default="{ errors }"
+                name="phone"
+                rules="required"
+              >
+                <b-form-input
+                  id="slugInput"
+                  v-model="admin.phone"
+                  size="lg"
+                  placeholder="Телефон"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+          </b-col>
         <!-- <b-col cols="12">
           <b-form-group>
             <b-form-file
@@ -143,80 +153,80 @@
           </b-form-group>
 
         </b-col> -->
-      </validation-observer>
-    </b-modal>
+        </validation-observer>
+      </b-modal>
 
-    <b-modal
-      id="modal-warning-edit"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Редактировать"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
-      <validation-observer ref="simpleRules">
-        <b-form>
-          <b-row>
-            <b-col cols="12">
-              <b-form-group
-                label="Имя Админ"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Имя Админ"
-                  rules="required"
+      <b-modal
+        id="modal-warning-edit"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Редактировать"
+        @hidden="resetModal"
+        @ok="handleOk"
+      >
+        <validation-observer ref="simpleRules">
+          <b-form>
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Имя Админ"
+                  label-for="largeInput"
                 >
-                  <b-form-input
-                    id="largeInput"
-                    v-model="admin.name"
-                    size="lg"
-                    placeholder="Имя Админ"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-              <b-form-group
-                label="Email Админ"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Email Админ"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Имя Админ"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="largeInput"
+                      v-model="admin.name"
+                      size="lg"
+                      placeholder="Имя Админ"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+                <b-form-group
+                  label="Email Админ"
+                  label-for="largeInput"
                 >
-                  <b-form-input
-                    id="largeInput"
-                    v-model="admin.email"
-                    size="lg"
-                    placeholder="Email"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="Телефон"
-                label-for="largeInput"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="phone"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Email Админ"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="largeInput"
+                      v-model="admin.email"
+                      size="lg"
+                      placeholder="Email"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="Телефон"
+                  label-for="largeInput"
                 >
-                  <b-form-input
-                    id="slugInput"
-                    v-model="admin.phone"
-                    size="lg"
-                    placeholder="Телефон"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
+                  <validation-provider
+                    #default="{ errors }"
+                    name="phone"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="slugInput"
+                      v-model="admin.phone"
+                      size="lg"
+                      placeholder="Телефон"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
             <!-- <b-col cols="12">
               <b-form-group>
                 <b-form-file
@@ -228,13 +238,13 @@
               </b-form-group>
 
             </b-col> -->
-          </b-row>
-        </b-form>
-      </validation-observer>
-    </b-modal>
+            </b-row>
+          </b-form>
+        </validation-observer>
+      </b-modal>
 
-  </b-card>
-
+    </b-card>
+  </div>
 </template>
 
 <script>
@@ -315,6 +325,7 @@ export default {
           label: 'Действия',
         },
       ],
+      show: true,
       user: {
         id: '',
         name: '',
@@ -337,6 +348,7 @@ export default {
       })
     },
     getAdmins() {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/admins`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -344,10 +356,11 @@ export default {
       })
         .then(res => {
           this.items = res.data.data
-          console.log(this.items)
+          this.show = false
         })
         .catch(er => {
           console.log(er)
+          this.show = false
         })
     },
     async add() {

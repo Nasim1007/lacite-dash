@@ -1,52 +1,64 @@
 <template>
-  <b-card>
-    <div>
-      <b-button
-        v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-        v-b-modal.modal-primaryadd
-        variant="outline-primary"
-        class="m-1"
-      >
-        Добавить
-      </b-button>
-      <b-table
-        responsive="sm"
-        :items="stores"
-        :fields="tableColumns"
-      >
-        <!-- <template #cell(image)="data">
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-card
+      v-if="!show"
+    >
+      <div>
+        <b-button
+          v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+          v-b-modal.modal-primaryadd
+          variant="outline-primary"
+          class="m-1"
+        >
+          Добавить
+        </b-button>
+        <b-table
+          responsive="sm"
+          :items="stores"
+          :fields="tableColumns"
+        >
+          <!-- <template #cell(image)="data">
           <b-avatar
             v-if="data.item.image"
             class="mr-1"
             :src="`${IMG_URL}${data.item.image}`"
           />
         </template> -->
-        <template #cell(actions)="data">
-          <div class="text-nowrap">
-            <b-button
-              id="gradient-primaryy"
-              v-b-modal.modal-primaryedit
-              class="btn-icon mr-1"
-              variant="gradient-primary"
-              @click="edit(data.item)"
-            >
-              <feather-icon icon="EditIcon" />
-            </b-button>
-            <b-button
-              class="btn-icon"
-              variant="gradient-danger"
-              @click="confirmDelete(data.item)"
-            >
-              <feather-icon icon="TrashIcon" />
-            </b-button>
+          <template #cell(actions)="data">
+            <div class="text-nowrap">
+              <b-button
+                id="gradient-primaryy"
+                v-b-modal.modal-primaryedit
+                class="btn-icon mr-1"
+                variant="gradient-primary"
+                @click="edit(data.item)"
+              >
+                <feather-icon icon="EditIcon" />
+              </b-button>
+              <b-button
+                class="btn-icon"
+                variant="gradient-danger"
+                @click="confirmDelete(data.item)"
+              >
+                <feather-icon icon="TrashIcon" />
+              </b-button>
             <!-- <b-dropdown
               :right="$store.state.appConfig.isRTL"
               no-caret
               toggle-class="p-0"
               variant="link"
             /> -->
-          </div>
-        </template>
+            </div>
+          </template>
         <!-- <template
           #cell(brand_id)="data"
           text-field="name"
@@ -62,189 +74,191 @@
             </b-badge>
           </div>
         </template> -->
-      </b-table>
-      <b-modal
-        id="modal-primaryadd"
-        ok-title="Сохранить"
-        cancel-title="Закрыть"
-        modal-class="modal-primary"
-        centered
-        title="Добавление"
-        @ok="add"
-        @hidden="resetModal"
-      >
-        <validation-observer ref="simpleRules">
-          <b-row>
-            <b-col cols="12">
-              <b-form-group
-                label="Название"
-                label-for="text"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Название"
-                  rules="required"
+        </b-table>
+        <b-modal
+          id="modal-primaryadd"
+          ok-title="Сохранить"
+          cancel-title="Закрыть"
+          modal-class="modal-primary"
+          centered
+          title="Добавление"
+          @ok="add"
+          @hidden="resetModal"
+        >
+          <validation-observer ref="simpleRules">
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Название"
+                  label-for="text"
                 >
-                  <b-form-input
-                    id="text"
-                    v-model="store.title"
-                    placeholder="Название"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="Адрес"
-                label-for="textarea"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="address"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Название"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="text"
+                      v-model="store.title"
+                      placeholder="Название"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="Адрес"
+                  label-for="textarea"
                 >
-                  <b-form-input
-                    id="adress"
-                    v-model="store.street"
-                    placeholder="Адрес"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="Телефон"
-                label-for="textarea"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="phone"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="address"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="adress"
+                      v-model="store.street"
+                      placeholder="Адрес"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="Телефон"
+                  label-for="textarea"
                 >
-                  <b-form-input
-                    id="phone"
-                    v-model="store.phone"
-                    placeholder="Адрес"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="phone"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="phone"
+                      v-model="store.phone"
+                      placeholder="Адрес"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group>
+                  <b-form-file
+                    v-model="store.file"
+                    value-field="id"
+                    size="lg"
+                    placeholder="Выберите изображение..."
+                    drop-placeholder="Slide..."
                   />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group>
-                <b-form-file
-                  v-model="store.file"
-                  value-field="id"
-                  size="lg"
-                  placeholder="Выберите изображение..."
-                  drop-placeholder="Slide..."
-                />
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </validation-observer>
-      </b-modal>
-      <b-modal
-        id="modal-primaryedit"
-        ok-title="Редактировать"
-        cancel-title="Закрыть"
-        modal-class="modal-primary"
-        centered
-        title="Редактирование"
-        @ok="handleOk"
-        @hidden="resetModal"
-      >
-        <validation-observer ref="simpleRules">
-          <b-row>
-            <b-col cols="12">
-              <b-form-group
-                label="Название"
-                label-for="text"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Название"
-                  rules="required"
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </validation-observer>
+        </b-modal>
+        <b-modal
+          id="modal-primaryedit"
+          ok-title="Редактировать"
+          cancel-title="Закрыть"
+          modal-class="modal-primary"
+          centered
+          title="Редактирование"
+          @ok="handleOk"
+          @hidden="resetModal"
+        >
+          <validation-observer ref="simpleRules">
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Название"
+                  label-for="text"
                 >
-                  <b-form-input
-                    id="text"
-                    v-model="store.title"
-                    placeholder="Название"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="Адрес"
-                label-for="textarea"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="address"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Название"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="text"
+                      v-model="store.title"
+                      placeholder="Название"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="Адрес"
+                  label-for="textarea"
                 >
-                  <b-form-input
-                    id="adress"
-                    v-model="store.street"
-                    placeholder="Адрес"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="Телефон"
-                label-for="textarea"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="phone"
-                  rules="required"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="address"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="adress"
+                      v-model="store.street"
+                      placeholder="Адрес"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="Телефон"
+                  label-for="textarea"
                 >
-                  <b-form-input
-                    id="phone"
-                    v-model="store.phone"
-                    placeholder="Адрес"
+                  <validation-provider
+                    #default="{ errors }"
+                    name="phone"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="phone"
+                      v-model="store.phone"
+                      placeholder="Адрес"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group>
+                  <b-form-file
+                    v-model="store.file"
+                    value-field="id"
+                    size="lg"
+                    placeholder="Выберите изображение..."
+                    drop-placeholder="Slide..."
                   />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group>
-                <b-form-file
-                  v-model="store.file"
-                  value-field="id"
-                  size="lg"
-                  placeholder="Выберите изображение..."
-                  drop-placeholder="Slide..."
-                />
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </validation-observer>
-      </b-modal>
-    </div>
-    <b-pagination
-      v-if="rows >= perPage"
-      v-model="currentPage"
-      hide-goto-end-buttons
-      :total-rows="rows"
-      :per-page="perPage"
-      @input="getStores"
-    />
-  </b-card>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </validation-observer>
+        </b-modal>
+      </div>
+      <b-pagination
+        v-if="rows >= perPage"
+        v-model="currentPage"
+        hide-goto-end-buttons
+        :total-rows="rows"
+        :per-page="perPage"
+        @input="getStores"
+      />
+    </b-card>
+  </div>
 </template>
 
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
 import {
+  BSpinner,
   BTable, BCard, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BPagination,
 
 } from 'bootstrap-vue'
@@ -270,6 +284,7 @@ export default {
     BButton,
     BModal,
     BPagination,
+    BSpinner,
   },
   directives: {
     'b-modal': VBModal,
@@ -280,6 +295,7 @@ export default {
       required,
       stores: [],
       IMG_URL: $themeConfig.app.IMG_URL,
+      show: true,
       tableColumns: [
         {
           key: 'id',
@@ -324,14 +340,17 @@ export default {
   },
   methods: {
     getStores(page) {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/stores?page=${page}&per_page=${this.perPage}`)
         .then(res => {
           this.stores = res.data.data
           this.rows = res.data.total
           this.perPage = res.data.per_page
+          this.show = false
         })
         .catch(er => {
           console.log(er)
+          this.show = false
         })
     },
     async add() {

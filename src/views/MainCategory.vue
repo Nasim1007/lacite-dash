@@ -1,7 +1,19 @@
 <template>
-  <b-card>
-    <b-row>
-      <!-- <b-col
+  <div>
+    <div
+      v-if="show"
+      class="d-flex justify-content-center align-items-center"
+      style="height: 50vh;"
+    >
+      <b-spinner
+        label="Spinning"
+      />
+    </div>
+    <b-card
+      v-if="!show"
+    >
+      <b-row>
+        <!-- <b-col
         md="3"
         class="mb-1"
       >
@@ -14,153 +26,79 @@
           </b-input-group-append>
         </b-input-group>
       </b-col> -->
-      <b-col md="9">
-        <b-button
-          v-ripple.400="'rgba(255, 159, 67, 0.15)'"
-          v-b-modal.modal-add
-          variant="outline-warning"
-        >
-          Добавить
-        </b-button>
-      </b-col>
-    </b-row>
-    <b-table
-      responsive="sm"
-      :items="items"
-      :fields="tableColumns"
-    >
-      <template
-        #cell(categories)="data"
-        text-field="name"
-      >
-        <div class="text-nowrap scroll">
-          <b-badge
-            v-for="item in data.item.categories"
-            :key="item.id"
-            variant="warning"
-            class="badge-glow mr-1 scroll"
+        <b-col md="9">
+          <b-button
+            v-ripple.400="'rgba(255, 159, 67, 0.15)'"
+            v-b-modal.modal-add
+            variant="outline-warning"
           >
-            {{ item.name }}
-          </b-badge>
-        </div>
-      </template>
-      <template v-slot:cell(actions)="data">
-        <b-button
-          v-b-modal.modal-warning-edit
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="warning"
-          class="btn-icon mr-1"
-          @click="edit(data.item)"
+            Добавить
+          </b-button>
+        </b-col>
+      </b-row>
+      <b-table
+        responsive="sm"
+        :items="items"
+        :fields="tableColumns"
+      >
+        <template
+          #cell(categories)="data"
+          text-field="name"
         >
-          <feather-icon icon="Edit2Icon" />
-        </b-button>
-        <b-button
-          variant="gradient-danger"
-          class="btn-icon"
-          @click="confirmDelete(data.item)"
-        >
-          <feather-icon icon="TrashIcon" />
-        </b-button>
-      </template>
-    </b-table>
-    <b-modal
-      id="modal-add"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Добавление"
-      @hidden="resetModal"
-      @ok="add"
-    >
-      <validation-observer ref="simpleRules">
-        <b-form>
-          <b-col cols="12">
-
-            <label for="input-default">Название</label>
-            <b-form-group>
-              <validation-provider
-                #default="{ errors }"
-                name="Название"
-                rules="required"
-              >
-                <b-form-input
-                  id="input-default"
-                  v-model="main.name"
-                  placeholder="Название"
-                />
-                <small class="text-danger">{{ errors[0] }}</small>
-              </validation-provider>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group
-              label="slug"
-              label-for="largeInput"
+          <div class="text-nowrap scroll">
+            <b-badge
+              v-for="item in data.item.categories"
+              :key="item.id"
+              variant="warning"
+              class="badge-glow mr-1 scroll"
             >
-              <validation-provider
-                #default="{ errors }"
-                name="Slug"
-                rules="required"
-              >
-                <b-form-input
-                  id="slugInput"
-                  v-model="main.slug"
-                  size="lg"
-                  placeholder="Slug"
-                />
-                <small class="text-danger">{{ errors[0] }}</small>
-              </validation-provider>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Для кого">
-              <validation-provider
-                #default="{ errors }"
-                name="Для кого"
-                rules="required"
-              >
-                <b-form-select
-                  v-model="main.selector"
-                  :options="options"
-                  text-field="name"
-                  value-field="id"
-                />
-                <small class="text-danger">{{ errors[0] }}</small>
-              </validation-provider>
-            </b-form-group>
-          </b-col>
-        </b-form>
-      </validation-observer>
-    </b-modal>
-
-    <b-modal
-      id="modal-warning-edit"
-      ok-variant="warning"
-      ok-title="Сохранить"
-      modal-class="modal-warning"
-      centered
-      title="Редактирование"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
-      <validation-observer ref="simpleRules">
-        <b-form>
-          <b-row>
+              {{ item.name }}
+            </b-badge>
+          </div>
+        </template>
+        <template v-slot:cell(actions)="data">
+          <b-button
+            v-b-modal.modal-warning-edit
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="warning"
+            class="btn-icon mr-1"
+            @click="edit(data.item)"
+          >
+            <feather-icon icon="Edit2Icon" />
+          </b-button>
+          <b-button
+            variant="gradient-danger"
+            class="btn-icon"
+            @click="confirmDelete(data.item)"
+          >
+            <feather-icon icon="TrashIcon" />
+          </b-button>
+        </template>
+      </b-table>
+      <b-modal
+        id="modal-add"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Добавление"
+        @hidden="resetModal"
+        @ok="add"
+      >
+        <validation-observer ref="simpleRules">
+          <b-form>
             <b-col cols="12">
-              <b-form-group
-                label="Название"
-                label-for="largeInput"
-              >
+
+              <label for="input-default">Название</label>
+              <b-form-group>
                 <validation-provider
                   #default="{ errors }"
                   name="Название"
                   rules="required"
                 >
                   <b-form-input
-                    id="largeInput"
+                    id="input-default"
                     v-model="main.name"
-                    size="lg"
                     placeholder="Название"
                   />
                   <small class="text-danger">{{ errors[0] }}</small>
@@ -204,12 +142,87 @@
                 </validation-provider>
               </b-form-group>
             </b-col>
-          </b-row>
-        </b-form>
-      </validation-observer>
-    </b-modal>
+          </b-form>
+        </validation-observer>
+      </b-modal>
 
-  </b-card>
+      <b-modal
+        id="modal-warning-edit"
+        ok-variant="warning"
+        ok-title="Сохранить"
+        modal-class="modal-warning"
+        centered
+        title="Редактирование"
+        @hidden="resetModal"
+        @ok="handleOk"
+      >
+        <validation-observer ref="simpleRules">
+          <b-form>
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Название"
+                  label-for="largeInput"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Название"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="largeInput"
+                      v-model="main.name"
+                      size="lg"
+                      placeholder="Название"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group
+                  label="slug"
+                  label-for="largeInput"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Slug"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="slugInput"
+                      v-model="main.slug"
+                      size="lg"
+                      placeholder="Slug"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group label="Для кого">
+                  <validation-provider
+                    #default="{ errors }"
+                    name="Для кого"
+                    rules="required"
+                  >
+                    <b-form-select
+                      v-model="main.selector"
+                      :options="options"
+                      text-field="name"
+                      value-field="id"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form>
+        </validation-observer>
+      </b-modal>
+
+    </b-card>
+  </div>
 
 </template>
 
@@ -230,6 +243,7 @@ import {
   VBModal,
   BFormSelect,
   BBadge,
+  BSpinner,
 } from 'bootstrap-vue'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
@@ -250,6 +264,7 @@ export default {
     BRow,
     BCol,
     BBadge,
+    BSpinner,
   },
   directives: {
     'b-modal': VBModal,
@@ -290,6 +305,7 @@ export default {
         },
 
       ],
+      show: true,
       main: {
         id: '',
         name: '',
@@ -313,6 +329,7 @@ export default {
       })
     },
     getMCategory() {
+      this.show = true
       axios.get(`${$themeConfig.app.API}v2/admin/main-category`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -320,9 +337,11 @@ export default {
       })
         .then(res => {
           this.items = res.data.data
+          this.show = false
         })
         .catch(er => {
           console.log(er)
+          this.show = false
         })
     },
     getWho() {

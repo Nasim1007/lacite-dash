@@ -188,7 +188,7 @@
             </validation-provider>
           </b-form-group>
         </b-col>
-        <b-col md="12">
+        <b-col md="6">
           <validation-provider
             #default="{ errors }"
             name="Описание"
@@ -204,6 +204,26 @@
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
+        </b-col>
+        <b-col md="6">
+          <b-form-group>
+            <validation-provider
+              #default="{ errors }"
+              name="Тип товар"
+              rules="required"
+            >
+              <label for="Quantity-default">Типы товар</label>
+
+              <b-form-select
+                id="select-default"
+                v-model="product.product_type_id"
+                :options="typeProducts"
+                value-field="id"
+                text-field="name"
+              />
+              <small class="text-danger">{{ errors[0] }}</small>
+            </validation-provider>
+          </b-form-group>
         </b-col>
         <b-col md="12">
           <validation-provider
@@ -374,7 +394,7 @@ import {
 } from 'bootstrap-vue'
 // import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-import axios from 'axios'
+import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
 
 import BCardCode from '@core/components/b-card-code/BCardCode.vue'
@@ -439,6 +459,7 @@ export default {
       values: [],
       brands: [],
       errors: [],
+      typeProducts: [],
       product: {
         id: '',
         name: '',
@@ -454,6 +475,7 @@ export default {
         characteristics: '',
         discount_id: '',
         discount_percent: '',
+        product_type_id: '',
       },
       selectedSize: null,
     }
@@ -462,6 +484,7 @@ export default {
     this.getBrands()
     this.getCategories()
     this.getDiscouts()
+    this.getProductsType()
   },
   methods: {
     validationForm() {
@@ -483,6 +506,13 @@ export default {
         console.log(er)
       })
     },
+    getProductsType() {
+      axios.get(`${$themeConfig.app.API}v2/admin/product-type`)
+        .then(res => {
+          this.typeProducts = res.data.data
+        })
+    },
+
     getBrands() {
       axios.get(`${$themeConfig.app.API}v2/admin/brands`, {
         headers: {
@@ -521,6 +551,7 @@ export default {
       myFormData.append('characteristics', this.product.characteristics)
       myFormData.append('discount_id', this.product.discount_id)
       myFormData.append('discount_percent', this.product.discount_percent)
+      myFormData.append('product_type_id', this.product.product_type_id)
 
       if (this.product.file) {
         myFormData.append('image', `${await this.getBase64(this.product.file)}`)

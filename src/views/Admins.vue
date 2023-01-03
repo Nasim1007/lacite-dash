@@ -26,7 +26,10 @@
           </b-input-group-append>
         </b-input-group>
       </b-col> -->
-        <b-col md="9">
+        <b-col
+          md="9"
+          class="mb-1"
+        >
           <b-button
             v-ripple.400="'rgba(255, 159, 67, 0.15)'"
             v-b-modal.modal-add
@@ -163,6 +166,14 @@
               </validation-provider>
             </b-form-group>
           </b-col>
+          <b-col cols="12">
+            <b-form-select
+              v-model="admin.role_ids"
+              :options="roles"
+              text-field="name"
+              value-field="id"
+            />
+          </b-col>
         </validation-observer>
       </b-modal>
 
@@ -282,6 +293,7 @@ import {
   BPagination,
   BButton,
   BSpinner,
+  BFormSelect,
 } from 'bootstrap-vue'
 import axios from '@axios'
 import { $themeConfig } from '@themeConfig'
@@ -303,6 +315,7 @@ export default {
     BCol,
     BPagination,
     BSpinner,
+    BFormSelect,
   },
   directives: {
     'b-modal': VBModal,
@@ -314,6 +327,7 @@ export default {
       passValue: '',
       username: '',
       required,
+      roles: [],
       items: [],
       show: true,
       tableColumns: [
@@ -358,6 +372,7 @@ export default {
   },
   mounted() {
     this.getAdmins(1)
+    this.getRoles()
   },
   methods: {
     validationForm() {
@@ -367,6 +382,19 @@ export default {
             alert('login successfully')
         }
       })
+    },
+    getRoles() {
+      axios.get(`${$themeConfig.app.API}v2/admin/roles`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then(res => {
+          this.roles = res.data.data
+        })
+        .catch(er => {
+          console.log(er)
+        })
     },
     getAdmins(page) {
       this.show = true

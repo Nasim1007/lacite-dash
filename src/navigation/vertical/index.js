@@ -75,6 +75,10 @@ export default [
     // ],
   },
   {
+    title: 'Ролы',
+    route: 'roles',
+  },
+  {
     title: 'Список заказов',
     route: 'orders',
     icon: 'CheckSquareIcon',

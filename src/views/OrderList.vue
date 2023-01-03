@@ -30,7 +30,7 @@
         </b-col> -->
           <b-col
             md="9"
-            class="d-flex justify-content-end"
+            class="d-flex justify-content-end mb-1"
           >
             <b-form-select
               v-model="selected"

@@ -26,7 +26,10 @@
           </b-input-group-append>
         </b-input-group>
       </b-col> -->
-        <b-col md="9">
+        <b-col
+          md="9"
+          class="mb-1"
+        >
           <b-button
             v-ripple.400="'rgba(255, 159, 67, 0.15)'"
             v-b-modal.modal-add

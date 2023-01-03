@@ -83,30 +83,67 @@
           @ok="add"
           @hidden="resetModal"
         >
-          <b-row>
-            <b-col cols="12">
-              <b-form-group>
-                <b-form-file
-                  v-model="category.file"
-                  size="lg"
-                  placeholder="Выберите изображение..."
-                  drop-placeholder="Slide..."
-                />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12">
-              <b-form-group
-                label="Название"
-                label-for="text"
-              >
-                <b-form-input
-                  id="text"
-                  v-model="category.name"
-                  placeholder="Название"
-                />
-              </b-form-group>
-            </b-col>
-          </b-row>
+          <validation-observer ref="simpleRules">
+            <b-form>
+              <b-row>
+                <b-col cols="12">
+                  <b-form-group
+                    label="Название"
+                    label-for="text"
+                  >
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Название"
+                      rules="required"
+                    >
+                      <b-form-input
+                        id="text"
+                        v-model="category.name"
+                        placeholder="Название"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col cols="12">
+                  <b-form-group
+                    label="Slug"
+                    label-for="text"
+                  >
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Slug"
+                      rules="required"
+                    >
+                      <b-form-input
+                        id="text"
+                        v-model="category.slug"
+                        placeholder="Slug"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+                <b-col cols="12">
+                  <b-form-group label="Для кого">
+                    <validation-provider
+                      #default="{ errors }"
+                      name="Для кого"
+                      rules="required"
+                    >
+                      <b-form-select
+                        v-model="category.for_whos_id"
+                        :options="options"
+                        text-field="name"
+                        value-field="id"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-form>
+          </validation-observer>
         </b-modal>
         <b-modal
           id="modal-primaryedit"
@@ -122,17 +159,19 @@
             <b-form>
               <b-row>
                 <b-col cols="12">
-                  <b-form-group>
+                  <b-form-group
+                    label="Название"
+                    label-for="text"
+                  >
                     <validation-provider
                       #default="{ errors }"
                       name="Название"
                       rules="required"
                     >
-                      <b-form-file
-                        v-model="category.file"
-                        size="lg"
-                        placeholder="Выберите изображение..."
-                        drop-placeholder="Slide..."
+                      <b-form-input
+                        id="text"
+                        v-model="category.name"
+                        placeholder="Название"
                       />
                       <small class="text-danger">{{ errors[0] }}</small>
                     </validation-provider>
@@ -189,7 +228,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { required } from '@validations'
 import {
   BSpinner,
-  BCardCode, BFormSelect, BTable, BForm, BCard, BDropdown, BFormFile, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BAvatar, BBadge,
+  BCardCode, BFormSelect, BTable, BForm, BCard, BDropdown, BFormInput, BFormGroup, VBModal, BModal, BRow, BCol, BButton, BAvatar, BBadge,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
@@ -208,7 +247,6 @@ export default {
     // eslint-disable-next-line no-dupe-keys
     ValidationProvider,
     BCard,
-    BFormFile,
     BFormInput,
     BFormGroup,
     BTable,
@@ -254,12 +292,6 @@ export default {
           sortable: true,
         },
         {
-          key: 'icon',
-          label: 'Изображение',
-          sortable: true,
-        },
-
-        {
           key: 'actions',
           label: 'Действия',
         },
@@ -268,7 +300,6 @@ export default {
         id: '',
         name: '',
         slug: '',
-        file: '',
         for_whos_id: '',
       },
     }
@@ -288,7 +319,7 @@ export default {
     },
     getCategories() {
       this.show = true
-      axios.get(`${$themeConfig.app.API}v2/admin/all_categories`, {
+      axios.get(`${$themeConfig.app.API}v2/admin/categories`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -319,6 +350,7 @@ export default {
       const myFormData = new FormData()
       myFormData.append('name', this.category.name)
       myFormData.append('for_whos_id', this.category.for_whos_id)
+      myFormData.append('parent_id', '1')
       if (this.category.file) {
         myFormData.append('icon', `${await this.getBase64(this.category.file)}`)
       }

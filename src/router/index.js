@@ -236,15 +236,15 @@ const router = new VueRouter({
       },
     },
     {
-      path: '/admins/moderator',
-      name: 'moderator',
-      component: () => import('@/views/Admins.vue'),
+      path: '/roles',
+      name: 'roles',
+      component: () => import('@/views/Roles.vue'),
       meta: {
-        pageTitle: 'Админы',
+        pageTitle: 'Роли',
         requiresAuth: true,
         breadcrumb: [
           {
-            text: 'Админы',
+            text: 'Роли',
             active: true,
             resource: 'Auth',
             action: 'read',

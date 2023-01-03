@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/require-v-for-key -->
 <template>
   <div>
     <div
@@ -230,6 +231,25 @@
                     </validation-provider>
                   </b-form-group>
                 </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <validation-provider
+                      #default="{ errors }"
+                      name="TypeProduct"
+                      rules="required"
+                    >
+                      <label for="select-default_dis">Типы товар</label>
+                      <b-form-select
+                        id="select-default_dis"
+                        v-model="product.product_type_id"
+                        :options="typeProducts"
+                        value-field="id"
+                        text-field="name"
+                      />
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </validation-provider>
+                  </b-form-group>
+                </b-col>
                 <b-col md="12">
                   <validation-provider
                     #default="{ errors }"
@@ -408,6 +428,7 @@
                     <option :value="values.values.name">
                       {{ values.values.name }}
                     </option>
+                    // eslint-disable-next-line vue/require-v-for-key
                     <option
                       v-for="attribute in values.values"
                       :value="attribute"
@@ -568,6 +589,7 @@ export default {
       images: [],
       values: [],
       errors: [],
+      typeProducts: [],
       product: {
         name: '',
         slug: '',
@@ -587,6 +609,7 @@ export default {
         id: '',
         discount_percent: '',
         discount_id: '',
+        product_type_id: '',
         brand: {
           id: '',
         },
@@ -602,6 +625,7 @@ export default {
     this.getProduct()
     this.getAttribute()
     this.getDiscouts()
+    this.getProductsType()
   },
   methods: {
 
@@ -805,6 +829,14 @@ export default {
         console.log(er)
       })
     },
+
+    getProductsType() {
+      axios.get(`${$themeConfig.app.API}v2/admin/product-type`)
+        .then(res => {
+          this.typeProducts = res.data.data
+        })
+    },
+
     async getBrands() {
       await axios.get(`${$themeConfig.app.API}v2/admin/brands`, {
         headers: {

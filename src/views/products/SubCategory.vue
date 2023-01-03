@@ -438,7 +438,7 @@ export default {
       myFormData.append('description', this.subcategory.description)
       myFormData.append('parent_id', this.subcategory.parent_id)
       // myFormData.append('for_whos_id', this.subcategory.for_who)
-      await axios.post(`${$themeConfig.app.API}v2/admin/subcategories`, myFormData, {
+      await axios.post(`${$themeConfig.app.API}v2/admin/categories`, myFormData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
